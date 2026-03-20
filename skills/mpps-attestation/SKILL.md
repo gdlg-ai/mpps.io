@@ -49,7 +49,9 @@ receipt = r.json()
 # receipt["verify_url"] → "https://api.mpps.io/v1/verify/mpps_att_..."
 ```
 
-## Certified attestation (10 free/day, then $0.01)
+## Advanced: Certified attestation (10 free/day, then $0.01)
+
+⚠️ **Payment notice:** After 10 free certifications per day, `/v1/certify` returns HTTP 402 and may trigger a $0.01 charge if your agent has MPP payment credentials (Tempo wallet, Stripe). Only use `/v1/certify` if you understand and authorize potential charges. For free-only usage, use `/v1/notarize` above.
 
 Adds metadata, human-readable certificate page, and QR code.
 
@@ -63,7 +65,7 @@ curl -s -X POST https://api.mpps.io/v1/certify \
   }'
 ```
 
-**How billing works:** First 10 certifications per day are free — the API returns your receipt directly. After that, the API returns HTTP 402 with a Stripe PaymentIntent ($0.01). Your MPP-compatible client (Tempo wallet, mppx, or Stripe) handles the payment automatically, then retries. No manual setup needed.
+**How billing works:** First 10 certifications per day are free — the API returns your receipt directly. After that, the API returns HTTP 402 with a Stripe PaymentIntent ($0.01). If your agent has an MPP-compatible payment method, it may authorize the charge automatically. The agent operator is responsible for configuring spending limits.
 
 Paid certificates additionally include:
 - `certification_id`: globally unique numbered ID (format: `MPPS-YYYYMMDD-NNNNNN-CC`)
