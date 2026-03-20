@@ -198,7 +198,7 @@ class CertifyRequest(BaseModel):
 # ── Certification Counter ────────────────────────────────
 
 def _next_cert_id() -> str:
-    """Atomic increment → MPPS-CERT-000001 format."""
+    """Atomic increment → MPPS-CERT-000000001 format."""
     try:
         resp = rate_table.update_item(
             Key={"pk": "mpps:cert_counter"},
@@ -208,7 +208,7 @@ def _next_cert_id() -> str:
             ReturnValues="UPDATED_NEW",
         )
         n = int(resp["Attributes"]["count"])
-        return f"MPPS-CERT-{n:06d}"
+        return f"MPPS-CERT-{n:09d}"
     except Exception:
         return None
 
