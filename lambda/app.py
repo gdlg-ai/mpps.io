@@ -209,7 +209,7 @@ def _next_cert_id() -> str:
             ReturnValues="UPDATED_NEW",
         )
         n = int(resp["Attributes"]["count"])
-        body = f"MPPS-{date_str}-{n:06d}"
+        body = f"MPPS-{date_str}-{n:06X}"
         check = hashlib.sha256(body.encode()).hexdigest()[:2].upper()
         return f"{body}-{check}"
     except Exception:
