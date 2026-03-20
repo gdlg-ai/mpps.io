@@ -236,13 +236,17 @@ def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, cer
     except Exception as e:
         raise RuntimeError(f"KMS signing failed: {type(e).__name__}")
 
+    # Use KMS response timestamp as authoritative AWS infrastructure time
+    kms_time = sig_response.get("ResponseMetadata", {}).get("HTTPHeaders", {}).get("date", "")
+
     signature = base64.b64encode(sig_response["Signature"]).decode("utf-8")
 
     cert_id = _next_cert_id() if paid else None
 
     internal = {
         "uuid": att_uuid, "agent_id": agent_id, "content_hash": content_hash,
-        "timestamp": ts, "signature": signature, "certified": certified, "paid": paid,
+        "timestamp": ts, "kms_timestamp": kms_time,
+        "signature": signature, "certified": certified, "paid": paid,
         "storage": {"provider": "aws-s3", "bucket": S3_BUCKET,
                     "lock_mode": "COMPLIANCE", "retention_years": 10},
     }
@@ -260,7 +264,8 @@ def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, cer
 
     public = {
         "uuid": att_uuid, "agent_id": agent_id, "content_hash": content_hash,
-        "timestamp": ts, "signature": signature, "certified": certified, "paid": paid,
+        "timestamp": ts, "kms_timestamp": kms_time,
+        "signature": signature, "certified": certified, "paid": paid,
         "storage": {"provider": "aws-s3", "lock_mode": "COMPLIANCE", "retention_years": 10},
         "verify_url": f"https://api.mpps.io/v1/verify/{att_uuid}",
     }
@@ -467,6 +472,7 @@ async def verify(att_uuid: str):
             public = {
                 "uuid": internal["uuid"], "agent_id": internal["agent_id"],
                 "content_hash": internal["content_hash"], "timestamp": internal["timestamp"],
+                "kms_timestamp": internal.get("kms_timestamp", ""),
                 "signature": internal["signature"], "certified": internal.get("certified", False),
                 "paid": internal.get("paid", False), "verified": True,
                 "storage": {"provider": "aws-s3", "lock_mode": "COMPLIANCE", "retention_years": 10},
