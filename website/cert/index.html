@@ -136,18 +136,18 @@
           </div>`;
       }
 
-      let metadataHtml = '';
+      // Metadata inline items
+      let metaItems = [];
       if (d.metadata) {
         const m = d.metadata;
-        if (m.description) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Description</div><div class="cert-field-value" style="font-family:var(--sans);font-size:14px;">${m.description}</div></div>`;
-        if (m.amount) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Amount</div><div class="cert-field-value">${m.amount}</div></div>`;
-        if (m.parties) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Parties</div><div class="cert-field-value">${m.parties.join(', ')}</div></div>`;
-        if (m.transaction_type) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Type</div><div class="cert-field-value">${m.transaction_type}</div></div>`;
+        if (m.description) metaItems.push(`<span class="cert-field-label">Description:</span> ${m.description}`);
+        if (m.amount) metaItems.push(`<span class="cert-field-label">Amount:</span> ${m.amount}`);
+        if (m.transaction_type) metaItems.push(`<span class="cert-field-label">Type:</span> ${m.transaction_type}`);
+        if (m.parties) metaItems.push(`<span class="cert-field-label">Parties:</span> ${m.parties.join(', ')}`);
       }
+      const metadataHtml = metaItems.length ? `<div style="font-size:12px;color:#52525b;line-height:1.8;margin-top:10px;">${metaItems.join('<br>')}</div>` : '';
 
-      // QR code
       const verifyUrl = `https://api.mpps.io/v1/verify/${d.uuid}`;
-      let qrHtml = '<div id="qr-code"></div>';
 
       container.innerHTML = `
         <div class="cert-card">
@@ -158,31 +158,29 @@
           <div class="cert-divider"></div>
           <div style="text-align:center;">${badgeHtml}</div>
           <div class="cert-body">
-            <p>This certifies that on <strong>${dateStr}</strong> at <strong>${timeStr}</strong><br>
-            the following content fingerprint was submitted and cryptographically attested:</p>
+            <p>Certified on <strong>${dateStr}</strong> at <strong>${timeStr}</strong></p>
           </div>
           <div class="cert-field"><div class="cert-field-label">Content Hash</div><div class="cert-field-value">${d.content_hash}</div></div>
-          <div class="cert-field"><div class="cert-field-label">Attestation ID</div><div class="cert-field-value">${d.uuid}</div></div>
-          <div class="cert-field"><div class="cert-field-label">Agent</div><div class="cert-field-value">${d.agent_id}</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div><span class="cert-field-label">Attestation ID</span><div class="cert-field-value">${d.uuid}</div></div>
+            <div><span class="cert-field-label">Agent</span><div class="cert-field-value">${d.agent_id}</div></div>
+          </div>
           ${metadataHtml}
           <div class="cert-divider"></div>
-          <div class="cert-technical">
-            <span class="label">Signed by:</span> AWS KMS HSM (FIPS 140-2 Level 3)<br>
-            <span class="label">Algorithm:</span> RSA-PSS SHA-256<br>
-            <span class="label">Storage:</span> AWS S3 Object Lock — COMPLIANCE — 10 years
-          </div>
-          <div class="cert-divider"></div>
-          <div class="cert-qr-section">
-            ${qrHtml}
-            <div class="cert-qr-text">
-              Scan to verify independently<br>
-              <span class="url">${verifyUrl}</span>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;">
+            <div class="cert-technical">
+              <span class="label">Signed:</span> AWS KMS HSM (FIPS 140-2 L3) · RSA-PSS SHA-256<br>
+              <span class="label">Storage:</span> S3 Object Lock · COMPLIANCE · 10 years
+            </div>
+            <div style="text-align:right;">
+              <div id="qr-code"></div>
+              <div style="font-size:9px;color:#a1a1aa;margin-top:2px;">Scan to verify</div>
             </div>
           </div>
           ${genesisHtml}
-          <div class="cert-divider"></div>
-          <div class="cert-genesis">
-            <p class="issuer">Issued by mpps.io — GlideLogic Corp. (OTCQB: GDLG)</p>
+          <div class="cert-divider" style="margin:10px 0;"></div>
+          <div style="text-align:center;font-size:10px;color:#a1a1aa;">
+            Issued by mpps.io — GlideLogic Corp. (OTCQB: GDLG) · <span style="font-family:var(--mono);font-size:9px;">${verifyUrl}</span>
           </div>
         </div>
         <div class="cert-actions">
