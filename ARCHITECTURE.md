@@ -43,13 +43,13 @@ Agent ──→ API Gateway ──→ Lambda (Python) ──→ KMS Sign ──�
 **Purpose**: Establish a trustworthy timestamp independent of mpps.io's own clock.
 
 **Mechanism**:
-- Source: AWS Time Sync Service
-- Infrastructure: Satellite-connected atomic clock clusters
-- Precision: Microsecond accuracy
-- Format: ISO 8601 with millisecond resolution (`2026-03-20T05:13:01.000Z`)
+- Dual timestamps per attestation:
+  - `timestamp`: Application-level UTC time (ISO 8601, millisecond resolution). Included in the signed evidence.
+  - `kms_timestamp`: AWS KMS response header date from the signing operation. Infrastructure-level, cannot be manipulated by application code.
+- Cross-verifiable: significant divergence between the two indicates tampering.
 
 **Properties**:
-- Not controlled by mpps.io — sourced from AWS hardware infrastructure
+- KMS timestamp sourced directly from AWS infrastructure — not controlled by mpps.io
 - Auditable via AWS CloudTrail
 - Resistant to software-level clock manipulation
 
