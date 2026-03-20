@@ -215,7 +215,7 @@ code, pre, .mono {
 /* ── Sections ── */
 
 .section {
-  padding: 48px 0;
+  padding: 32px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -224,12 +224,12 @@ code, pre, .mono {
 }
 
 .section-title {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-dim);
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .section h2 {
@@ -994,10 +994,20 @@ code, pre, .mono {
     min-height: auto;
   }
 
+  .cert-page > a {
+    display: none;
+  }
+
   .cert-card {
     box-shadow: none;
     border: 2px solid #000;
     max-width: 100%;
     background: #fff;
+    padding: 24px 32px;
+    font-size: 13px;
+  }
+
+  .cert-header h1 {
+    font-size: 20px;
   }
 }
