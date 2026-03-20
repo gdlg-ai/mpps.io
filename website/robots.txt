@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /v1/
+
+Sitemap: https://mpps.io/sitemap.xml
+
+# AI agents: see https://api.mpps.io/llms.txt

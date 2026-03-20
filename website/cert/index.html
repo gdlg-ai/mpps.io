@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attestation Certificate — mpps_att_d530a57c095a4d66 — mpps.io</title>
+  <meta name="description" content="Genesis Certificate #1. On March 20, 2026, two days after agents learned to pay, they learned to remember. Independently verifiable.">
+    <link rel="canonical" href="https://mpps.io/cert/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mpps.io/cert/">
+  <meta property="og:title" content="Genesis Certificate #1 — mpps.io">
+  <meta property="og:description" content="On March 20, 2026, two days after agents learned to pay, they learned to remember. Cryptographic attestation certificate.">
+  <meta property="og:site_name" content="mpps.io">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Genesis Certificate #1 — mpps.io">
+  <meta name="twitter:description" content="On March 20, 2026, two days after agents learned to pay, they learned to remember.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">mpps.io</a>
+      <div class="nav-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <a href="https://github.com/gdlg-ai/mpps.io#readme" target="_blank">Docs</a>
+        <a href="/verify.html">Verify</a>
+        <a href="/skills.html">Skills</a>
+        <a href="/#pricing">Pricing</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="cert-page">
+
+    <a href="/" style="display:inline-block;margin-bottom:1.5rem;color:var(--text-muted);text-decoration:none;font-size:14px;">← Back to mpps.io</a>
+
+    <div class="cert-card">
+
+      <div class="cert-header">
+        <h1>Attestation Certificate</h1>
+        <div class="cert-issuer">mpps.io</div>
+      </div>
+
+      <div class="cert-divider"></div>
+
+      <div class="cert-body">
+        <p>This certifies that on <strong>March 20, 2026 at 06:52:12 UTC</strong><br>
+        the following content fingerprint was submitted<br>
+        and cryptographically attested:</p>
+      </div>
+
+      <div class="cert-field">
+        <div class="cert-field-label">Content Hash</div>
+        <div class="cert-field-value">sha256:2b0a0357f4c629f357fcf97a8febe6b38be78cace22823ae15823d9e723ae3d0</div>
+      </div>
+
+      <div class="cert-field">
+        <div class="cert-field-label">Attestation ID</div>
+        <div class="cert-field-value">mpps_att_d530a57c095a4d66</div>
+      </div>
+
+      <div class="cert-field">
+        <div class="cert-field-label">Agent</div>
+        <div class="cert-field-value">mpps_agent_58ce44d9</div>
+      </div>
+
+      <div class="cert-divider"></div>
+
+      <div class="cert-technical">
+        <span class="label">Signed by:</span> AWS KMS HSM (FIPS 140-2 Level 3)<br>
+        <span class="label">Algorithm:</span> RSA-PSS SHA-256<br>
+        <span class="label">Storage:</span> AWS S3 Object Lock &mdash; COMPLIANCE &mdash; 10 years
+      </div>
+
+      <div class="cert-divider" style="margin: 20px 0;"></div>
+
+      <div class="cert-qr-section">
+        <div class="cert-qr" id="qrcode"></div>
+        <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+        <script>
+          var qr = qrcode(0, 'M');
+          qr.addData('https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66');
+          qr.make();
+          document.getElementById('qrcode').innerHTML = qr.createSvgTag({cellSize: 3, margin: 0});
+        </script>
+        -->
+        <div class="cert-qr-text">
+          Scan to verify independently<br>
+          <span class="url">https://api.mpps.io/v1/verify/<br>mpps_att_d530a57c095a4d66</span>
+        </div>
+      </div>
+
+      <div class="cert-divider"></div>
+
+      <div class="cert-genesis">
+        <p>This is the genesis attestation of mpps.io — Certificate #1.<br>
+        It attests the following statement:</p>
+        <p class="quote">"On March 20, 2026, two days after agents learned to pay, they learned to remember."</p>
+        <p class="issuer">Issued by mpps.io &mdash; GlideLogic Corp. (OTCQB: GDLG)</p>
+      </div>
+
+    </div>
+
+    <div class="cert-actions">
+      <a href="javascript:window.print()" class="btn btn-secondary btn-sm">Print / Save PDF</a>
+      <a href="https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66" class="btn btn-secondary btn-sm" target="_blank">Download JSON</a>
+      <a href="https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66" class="btn btn-primary btn-sm" target="_blank">Verify via API</a>
+    </div>
+
+    <p class="cert-note">This certificate was generated from attestation data stored immutably in AWS S3.</p>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>mpps.io is an independent open-source project.</p>
+      <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
+      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <div class="footer-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <span class="sep">·</span>
+        <a href="/privacy.html">Privacy</a>
+        <span class="sep">·</span>
+        <a href="/terms.html">Terms</a>
+        <span class="sep">·</span>
+        <a href="https://api.mpps.io/v1/health" target="_blank">Status</a>
+        <span class="sep">·</span>
+        <a href="mailto:contact@mpps.io">contact@mpps.io</a>
+      </div>
+      <p class="copyright">© 2026 GlideLogic Corp. MIT License.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

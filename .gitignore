@@ -1,0 +1,26 @@
+# Secrets
+deployment/aws_info.txt
+deployment/stripe_info.txt
+deployment/mpps.pem
+deployment/mpps.pub
+
+# OpenSpec internals
+openspec/changes/
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# OS
+.DS_Store
+deployment/
+discussion/
+api/
+.claude/
+openspec/
+.agents/
+.agent/
+.pi/
+skills-lock.json

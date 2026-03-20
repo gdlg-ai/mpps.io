@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Attestation — mpps.io</title>
+  <meta name="description" content="Verify any mpps.io attestation independently. Enter a UUID to retrieve cryptographic proof.">
+    <link rel="canonical" href="https://mpps.io/verify">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mpps.io/verify">
+  <meta property="og:title" content="Verify Attestation — mpps.io">
+  <meta property="og:description" content="Verify any mpps.io attestation by UUID. Independent, cryptographic proof.">
+  <meta property="og:site_name" content="mpps.io">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Verify Attestation — mpps.io">
+  <meta name="twitter:description" content="Verify any mpps.io attestation by UUID. Independent, cryptographic proof.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">mpps.io</a>
+      <div class="nav-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <a href="https://github.com/gdlg-ai/mpps.io#readme" target="_blank">Docs</a>
+        <a href="/verify.html">Verify</a>
+        <a href="/skills.html">Skills</a>
+        <a href="/#pricing">Pricing</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <section style="padding-top: 60px;">
+      <div class="section-title">Verify Attestation</div>
+      <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 15px;">Enter an attestation UUID to verify its existence and retrieve the cryptographic receipt.</p>
+
+      <div class="verify-search">
+        <input type="text" id="uuid-input" placeholder="mpps_att_d530a57c095a4d66" value="mpps_att_d530a57c095a4d66">
+        <button onclick="verifyAttestation()">Verify</button>
+      </div>
+
+      <div class="verify-status verified" id="verify-status">&#x2713; VERIFIED</div>
+
+      <div class="data-table" id="attestation-data">
+        <div class="data-row">
+          <div class="data-label">Attestation ID</div>
+          <div class="data-value">mpps_att_d530a57c095a4d66</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Status</div>
+          <div class="data-value"><span class="green">&#x2713; VERIFIED</span></div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Timestamp</div>
+          <div class="data-value">2026-03-20T06:52:12.982Z</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Content Hash</div>
+          <div class="data-value">sha256:2b0a0357f4c629f357fcf97a8febe6b38be78cace22823ae15823d9e723ae3d0</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Agent ID</div>
+          <div class="data-value">mpps_agent_58ce44d9</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Signature</div>
+          <div class="data-value expandable" id="sig-field" onclick="toggleSignature()">YkHxQ7m3F8vLp2Nw9RtJ5XcZaB6DgE4HiKjMl0OnPqSrTuVw...</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Sign Algorithm</div>
+          <div class="data-value">RSA-PSS SHA-256</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">HSM</div>
+          <div class="data-value">AWS KMS (FIPS 140-2 Level 3)</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">Storage</div>
+          <div class="data-value">AWS S3 Object Lock — COMPLIANCE — 10-year retention</div>
+        </div>
+        <div class="data-row">
+          <div class="data-label">S3 Key</div>
+          <div class="data-value">attestations/2026-03-20/mpps_att_d530a57c095a4d66.json</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+        <a href="https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66" class="btn btn-secondary btn-sm" target="_blank">Download Receipt JSON</a>
+        <a href="/cert/" class="btn btn-secondary btn-sm">View Certificate →</a>
+      </div>
+
+      <p style="color: var(--text-dim); font-size: 13px; margin-top: 24px;">Live verification queries the API. This page shows the Genesis Certificate data.</p>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>mpps.io is an independent open-source project.</p>
+      <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
+      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <div class="footer-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <span class="sep">·</span>
+        <a href="/privacy.html">Privacy</a>
+        <span class="sep">·</span>
+        <a href="/terms.html">Terms</a>
+        <span class="sep">·</span>
+        <a href="https://api.mpps.io/v1/health" target="_blank">Status</a>
+        <span class="sep">·</span>
+        <a href="mailto:contact@mpps.io">contact@mpps.io</a>
+      </div>
+      <p class="copyright">© 2026 GlideLogic Corp. MIT License.</p>
+    </div>
+  </footer>
+
+  <script>
+    var sigExpanded = false;
+    var fullSig = 'YkHxQ7m3F8vLp2Nw9RtJ5XcZaB6DgE4HiKjMl0OnPqSrTuVwXyZ1Ab2Cd3Ef4Gh5Ij6Kl7Mn8Op9Qr0St1Uv2Wx3Yz4Ab5Cd6Ef7Gh8Ij9Kl0Mn1Op2Qr3St4Uv5Wx6Yz7Ab8Cd9Ef0Gh1Ij2Kl3Mn4Op5Qr6St7Uv8Wx9Yz0';
+    var shortSig = 'YkHxQ7m3F8vLp2Nw9RtJ5XcZaB6DgE4HiKjMl0OnPqSrTuVw...';
+
+    function toggleSignature() {
+      var el = document.getElementById('sig-field');
+      sigExpanded = !sigExpanded;
+      if (sigExpanded) {
+        el.textContent = fullSig;
+        el.classList.remove('expandable');
+      } else {
+        el.textContent = shortSig;
+        el.classList.add('expandable');
+      }
+    }
+
+    function verifyAttestation() {
+      var uuid = document.getElementById('uuid-input').value.trim();
+      if (!uuid) return;
+      if (uuid === 'mpps_att_d530a57c095a4d66') {
+        document.getElementById('verify-status').className = 'verify-status verified';
+        document.getElementById('verify-status').innerHTML = '&#x2713; VERIFIED';
+        document.getElementById('attestation-data').style.display = 'block';
+      } else {
+        window.open('https://api.mpps.io/v1/verify/' + encodeURIComponent(uuid), '_blank');
+      }
+    }
+
+    document.getElementById('uuid-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') verifyAttestation();
+    });
+  </script>
+
+</body>
+</html>

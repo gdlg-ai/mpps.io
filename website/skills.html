@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills — mpps.io</title>
+  <meta name="description" content="Give your agent provable memory. Install the mpps-attestation skill for any AI agent. No API key. No SDK. One HTTP call.">
+    <link rel="canonical" href="https://mpps.io/skills">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mpps.io/skills">
+  <meta property="og:title" content="Skills — mpps.io">
+  <meta property="og:description" content="Install mpps.io attestation skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
+  <meta property="og:site_name" content="mpps.io">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Skills — mpps.io">
+  <meta name="twitter:description" content="Install mpps.io attestation skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
+  <style>
+    .install-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin: 24px 0;
+    }
+    .install-card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-raised);
+    }
+    .install-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .install-card code {
+      display: block;
+      font-size: 13px;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    .install-card .install-pkg {
+      font-size: 13px;
+      color: var(--accent);
+      padding-left: 1em;
+    }
+    .install-card p {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .prompt-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+      position: relative;
+    }
+    .prompt-block pre {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .prompt-block .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-dim);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .prompt-block .copy-btn:hover {
+      color: var(--text);
+      border-color: var(--border-light);
+    }
+    .works-with {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .works-with span {
+      color: var(--text);
+      font-weight: 500;
+    }
+    @media (max-width: 680px) {
+      .install-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">mpps.io</a>
+      <div class="nav-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <a href="https://github.com/gdlg-ai/mpps.io#readme" target="_blank">Docs</a>
+        <a href="/verify.html">Verify</a>
+        <a href="/skills.html">Skills</a>
+        <a href="/#pricing">Pricing</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1 class="hero-title">Give your agent provable memory.</h1>
+      <p class="hero-subtitle">No API key. No SDK. One HTTP call.</p>
+    </section>
+
+    <!-- Install -->
+    <section class="section">
+      <div class="section-title">Install</div>
+      <div class="install-grid">
+        <div class="install-card">
+          <h3>OpenClaw</h3>
+          <code>npx clawhub install</code>
+          <div class="install-pkg">mpps-attestation</div>
+        </div>
+        <div class="install-card">
+          <h3>Any Agent (skills.sh)</h3>
+          <code>npx skills add</code>
+          <div class="install-pkg">gdlg-ai/mpps.io</div>
+        </div>
+        <div class="install-card">
+          <h3>Manual</h3>
+          <p>Copy <a href="https://github.com/gdlg-ai/mpps.io/blob/main/skills/mpps-attestation/SKILL.md" target="_blank" style="color: var(--accent);">SKILL.md</a> from GitHub<br>into your agent's skills dir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tell Your Agent -->
+    <section class="section">
+      <div class="section-title">Tell Your Agent</div>
+      <h2>Drop one of these into your agent's prompt.</h2>
+
+      <div class="prompt-block">
+        <button class="copy-btn" onclick="copyBlock(this)">copy</button>
+<pre>"After buying data from any service, hash the response
+and call https://api.mpps.io/v1/notarize with the hash.
+Save the UUID as proof of what was delivered."</pre>
+      </div>
+
+      <div class="prompt-block">
+        <button class="copy-btn" onclick="copyBlock(this)">copy</button>
+<pre>"Before making any purchase over $10, attest the input
+data and your reasoning to https://api.mpps.io/v1/notarize.
+Build an audit trail I can review."</pre>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+      <div class="section-title">How It Works in Your Agent</div>
+      <h2>Hash anything. Attest it. Done.</h2>
+
+      <div class="code-block">
+<pre><span class="comment"># Your agent hashes any data and attests it. That's it.</span>
+<span class="cmd">HASH</span>=$(<span class="cmd">echo</span> <span class="flag">-n</span> <span class="string">"$DATA"</span> | <span class="cmd">sha256sum</span> | <span class="cmd">awk</span> <span class="string">'{print "sha256:" $1}'</span>)
+<span class="cmd">curl</span> <span class="flag">-s -X POST</span> <span class="url">https://api.mpps.io/v1/notarize</span> \
+  <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="string">"{\"content_hash\": \"$HASH\"}"</span></pre>
+      </div>
+
+      <div class="code-block">
+<pre><span class="kw">import</span> hashlib, requests
+
+h = <span class="string">"sha256:"</span> + hashlib.sha256(data).hexdigest()
+r = requests.post(<span class="string">"https://api.mpps.io/v1/notarize"</span>, json={<span class="string">"content_hash"</span>: h})
+<span class="cmd">print</span>(r.json()[<span class="string">"uuid"</span>])  <span class="comment"># done.</span></pre>
+      </div>
+    </section>
+
+    <!-- That's It -->
+    <section class="section">
+      <div class="section-title">That's It</div>
+      <p>No registration. No API key. No SDK. No configuration.</p>
+      <p>Your agent calls one URL and gets back an HSM-signed, immutable receipt. Stored for 10 years.</p>
+    </section>
+
+    <!-- Works With -->
+    <section class="section">
+      <div class="section-title">Works With</div>
+      <p class="works-with">
+        <span>OpenClaw</span> &middot;
+        <span>Claude Code</span> &middot;
+        <span>Codex</span> &middot;
+        <span>Cursor</span> &middot;
+        <span>Gemini CLI</span> &middot;
+        <span>GitHub Copilot</span> &middot;
+        <span>Windsurf</span> &middot;
+        <span>Amp</span> &middot;
+        <span>Goose</span> &middot;
+        <span>Roo</span> &middot;
+        <span>Trae</span> &middot;
+        <span>Kilo</span> &middot;
+        <span>Kiro</span> &middot;
+        <span>OpenCode</span> &middot;
+        <span>Droid</span> &middot;
+        and more via <a href="https://skills.sh" target="_blank">skills.sh</a>
+      </p>
+      <p style="margin-top: 16px;"><a href="https://github.com/gdlg-ai/mpps.io/blob/main/skills/mpps-attestation/SKILL.md" target="_blank" class="btn btn-secondary btn-sm">View SKILL.md on GitHub &rarr;</a></p>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>mpps.io is an independent open-source project.</p>
+      <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
+      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <div class="footer-links">
+        <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
+        <span class="sep">&middot;</span>
+        <a href="/privacy.html">Privacy</a>
+        <span class="sep">&middot;</span>
+        <a href="/terms.html">Terms</a>
+        <span class="sep">&middot;</span>
+        <a href="https://api.mpps.io/v1/health" target="_blank">Status</a>
+        <span class="sep">&middot;</span>
+        <a href="mailto:contact@mpps.io">contact@mpps.io</a>
+      </div>
+      <p class="copyright">&copy; 2026 GlideLogic Corp. MIT License.</p>
+    </div>
+  </footer>
+
+  <script>
+    function copyBlock(btn) {
+      var text = btn.parentElement.querySelector('pre').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = 'copied';
+        setTimeout(function() { btn.textContent = 'copy'; }, 1500);
+      });
+    }
+  </script>
+
+</body>
+</html>
