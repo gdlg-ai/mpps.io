@@ -170,7 +170,7 @@
         </div>
         <div class="trust-layer">
           <span class="trust-layer-name">Timestamp</span>
-          <span class="trust-layer-desc">Server-side ISO 8601 timestamps via AWS Time Sync. Monotonic ordering within the attestation log.</span>
+          <span class="trust-layer-desc">Server-side ISO 8601 timestamps from AWS Lambda runtime clock (synchronized via AWS Time Sync infrastructure). Millisecond resolution.</span>
         </div>
         <div class="trust-layer">
           <span class="trust-layer-name">Signature</span>
@@ -182,7 +182,7 @@
         </div>
         <div class="trust-layer">
           <span class="trust-layer-name">Verification</span>
-          <span class="trust-layer-desc">Open-source verifier. Works offline. No account, no credentials, no trust required. Your evidence outlives us.</span>
+          <span class="trust-layer-desc">Open-source verifier. Works offline after one-time public key fetch. No account, no credentials. Your evidence outlives us.</span>
         </div>
       </div>
     </section>
