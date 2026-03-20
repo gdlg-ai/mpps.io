@@ -198,8 +198,9 @@ class CertifyRequest(BaseModel):
 # ── Certification Counter ────────────────────────────────
 
 def _next_cert_id() -> str:
-    """Atomic increment → MPPS-CERT-000000001 format."""
+    """Atomic increment → MPPS-YYYYMMDD-NNNNNN-CC format with CRC check."""
     try:
+        date_str = datetime.now(timezone.utc).strftime("%Y%m%d")
         resp = rate_table.update_item(
             Key={"pk": "mpps:cert_counter"},
             UpdateExpression="SET #c = if_not_exists(#c, :zero) + :one",
@@ -208,7 +209,9 @@ def _next_cert_id() -> str:
             ReturnValues="UPDATED_NEW",
         )
         n = int(resp["Attributes"]["count"])
-        return f"MPPS-CERT-{n:09d}"
+        body = f"MPPS-{date_str}-{n:06d}"
+        check = hashlib.sha256(body.encode()).hexdigest()[:2].upper()
+        return f"{body}-{check}"
     except Exception:
         return None
 

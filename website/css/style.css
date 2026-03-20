@@ -1003,11 +1003,71 @@ code, pre, .mono {
     border: 2px solid #000;
     max-width: 100%;
     background: #fff;
-    padding: 24px 32px;
-    font-size: 13px;
+    padding: 16px 24px;
+    font-size: 11px;
+  }
+
+  .cert-card::before {
+    inset: 4px;
   }
 
   .cert-header h1 {
-    font-size: 20px;
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+
+  .cert-divider {
+    margin: 8px 0;
+  }
+
+  .cert-body {
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .cert-field {
+    margin-bottom: 8px;
+  }
+
+  .cert-field-label {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+
+  .cert-field-value {
+    font-size: 11px;
+  }
+
+  .cert-technical {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .cert-qr-section {
+    gap: 10px;
+    margin: 8px 0;
+  }
+
+  .cert-qr-section svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cert-genesis {
+    margin-top: 8px;
+  }
+
+  .cert-genesis .quote {
+    font-size: 11px;
+  }
+
+  .cert-badge {
+    font-size: 9px;
+    padding: 2px 8px;
+  }
+
+  .cert-id {
+    font-size: 13px;
+    margin: 4px 0 8px;
   }
 }
