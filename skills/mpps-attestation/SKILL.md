@@ -4,15 +4,20 @@ description: "Free, no-auth attestation. Prove what your agent did — one HTTP 
 license: MIT
 metadata:
   author: gdlg-ai
-  version: "1.1.0"
+  version: "1.2.0"
   homepage: https://mpps.io/skills
+  source: https://github.com/gdlg-ai/mpps.io
 compatibility: Network access to api.mpps.io required. Works with any HTTP client (curl, requests, fetch).
 ---
 
 # mpps-attestation
 
-Create cryptographic attestations for agent actions via mpps.io.
+Create cryptographic attestations for agent actions via [mpps.io](https://mpps.io).
 Free. No API key. No SDK. One HTTP call.
+
+**Source code**: https://github.com/gdlg-ai/mpps.io (MIT license)
+**API docs**: https://github.com/gdlg-ai/mpps.io/blob/main/docs/api.md
+**Security model**: https://github.com/gdlg-ai/mpps.io/blob/main/SECURITY.md
 
 ## When to use
 
@@ -44,9 +49,9 @@ receipt = r.json()
 # receipt["verify_url"] → "https://api.mpps.io/v1/verify/mpps_att_..."
 ```
 
-## Paid: Certified attestation ($0.01)
+## Certified attestation (10 free/day, then $0.01)
 
-Numbered certificate with metadata. Human-readable, printable, with QR code.
+Adds metadata, human-readable certificate page, and QR code.
 
 ```bash
 curl -s -X POST https://api.mpps.io/v1/certify \
@@ -54,15 +59,16 @@ curl -s -X POST https://api.mpps.io/v1/certify \
   -d '{
     "content_hash": "sha256:...",
     "description": "API data purchase confirmation",
-    "amount": "$50.00",
-    "parent_uuid": "mpps_att_previous..."
+    "amount": "$50.00"
   }'
-# 10 free/day, then $0.01 via MPP
-# Paid certs include:
-#   certification_id: "MPPS-20260320-000003-A7"
-#   certificate_url:  "https://mpps.io/cert/?uuid=..."
-#   paid: true
 ```
+
+**How billing works:** First 10 certifications per day are free — the API returns your receipt directly. After that, the API returns HTTP 402 with a Stripe PaymentIntent ($0.01). Your MPP-compatible client (Tempo wallet, mppx, or Stripe) handles the payment automatically, then retries. No manual setup needed.
+
+Paid certificates additionally include:
+- `certification_id`: globally unique numbered ID (format: `MPPS-YYYYMMDD-NNNNNN-CC`)
+- `paid: true` flag
+- Certificate page with "Paid Certificate" badge
 
 ## Verify
 
@@ -79,14 +85,26 @@ curl https://api.mpps.io/v1/verify/mpps_att_0c27bebca6dc4bd6
 | 10-year storage | ✓ | ✓ | ✓ |
 | Metadata | — | ✓ | ✓ |
 | Certificate page | — | ✓ | ✓ |
-| Certification ID | — | — | ✓ MPPS-YYYYMMDD-NNNNNN-CC |
+| Certification ID | — | — | ✓ |
 | Paid badge | — | — | ✓ |
+
+## Security & trust
+
+All claims are verifiable:
+- **HSM signing**: AWS KMS key `alias/mpps-notary-key`, FIPS 140-2 Level 3. Public key at `GET https://api.mpps.io/v1/public-key`.
+- **Immutable storage**: AWS S3 Object Lock, Compliance Mode, 10-year retention. Cannot be deleted by anyone including AWS root.
+- **Open source**: Full Lambda code, SDK, and verifier at https://github.com/gdlg-ai/mpps.io
+- **Architecture**: https://github.com/gdlg-ai/mpps.io/blob/main/ARCHITECTURE.md
+- **Security model**: https://github.com/gdlg-ai/mpps.io/blob/main/SECURITY.md
+- **Offline verification**: https://github.com/gdlg-ai/mpps.io/blob/main/docs/verify.md
+
+## Privacy
+
+You send only a SHA-256 hash — mpps.io never sees your original data. For small or predictable inputs, hashes can theoretically be brute-forced. Avoid hashing short secrets directly; hash larger payloads or use a salt.
 
 ## Key facts
 
 - Free: 10 attestations/hour, 10 certified/day
 - No registration, no API key, no SDK required
-- HSM-signed (AWS KMS, FIPS 140-2 Level 3)
-- Immutably stored for 10 years (AWS S3 Object Lock)
-- Open source: https://github.com/gdlg-ai/mpps.io
-- Verification guide: https://github.com/gdlg-ai/mpps.io/blob/main/docs/verify.md
+- Built by GlideLogic Corp. (OTCQB: GDLG)
+- Website: https://mpps.io
