@@ -277,6 +277,26 @@ def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, cer
 app = FastAPI(title="mpps.io", version=VERSION, docs_url=None, redoc_url=None)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
+# ── Root ────────────────────────────────────────────────
+
+@app.get("/")
+async def root():
+    return {
+        "service": "mpps.io",
+        "description": "Proof of delivery for the Machine Payments Protocol",
+        "version": VERSION,
+        "endpoints": {
+            "notarize": "POST /v1/notarize",
+            "certify": "POST /v1/certify",
+            "verify": "GET /v1/verify/{uuid}",
+            "public_key": "GET /v1/public-key",
+            "health": "GET /v1/health",
+        },
+        "docs": "https://mpps.io",
+        "llms_txt": "https://api.mpps.io/llms.txt",
+        "github": "https://github.com/gdlg-ai/mpps.io",
+    }
+
 # ── Global Exception Handler ────────────────────────────
 
 from fastapi.exceptions import RequestValidationError
