@@ -2,10 +2,10 @@
 name: mpps-attestation
 description: "Free, no-auth attestation. Prove what your agent did — one HTTP call, HSM-signed, stored 10 years. Paid certs get numbered IDs."
 license: MIT
+homepage: https://mpps.io/skills
 metadata:
   author: gdlg-ai
-  version: "1.2.0"
-  homepage: https://mpps.io/skills
+  version: "1.2.1"
   source: https://github.com/gdlg-ai/mpps.io
 compatibility: Network access to api.mpps.io required. Works with any HTTP client (curl, requests, fetch).
 ---
