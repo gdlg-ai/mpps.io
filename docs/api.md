@@ -109,13 +109,14 @@ curl -X POST https://api.mpps.io/v1/certify \
   "timestamp": "2026-03-20T05:14:00.000Z",
   "signature": "MGYCMQDh7kR3L9x4bVkv...",
   "certified": true,
+  "paid": false,
   "storage": {
     "provider": "aws-s3",
     "lock_mode": "COMPLIANCE",
     "retention_years": 10
   },
   "verify_url": "https://api.mpps.io/v1/verify/mpps_att_c4d5e6f7a8b90123",
-  "certificate_url": "https://mpps.io/cert/mpps_att_c4d5e6f7a8b90123",
+  "certificate_url": "https://mpps.io/cert/?uuid=mpps_att_c4d5e6f7a8b90123",
   "metadata": {
     "description": "Order delivery confirmation",
     "transaction_type": "DELIVERY_PROOF"
@@ -166,7 +167,24 @@ Where `<credential>` is either the `challenge_id` or a base64-encoded JSON conta
 
 ### Response 200 — Certified (Paid)
 
-Same as free response, plus a `Payment-Receipt` header containing a base64-encoded payment receipt.
+Same as free response, plus:
+
+- `paid: true`
+- `certification_id`: globally unique numbered ID, format `MPPS-YYYYMMDD-NNNNNN-CC` (date + hex sequence + CRC check)
+- `Payment-Receipt` header containing a base64-encoded payment receipt
+
+```json
+{
+  "uuid": "mpps_att_7f256401e4c34155",
+  "certified": true,
+  "paid": true,
+  "certification_id": "MPPS-20260320-000002-E0",
+  "certificate_url": "https://mpps.io/cert/?uuid=mpps_att_7f256401e4c34155",
+  "...": "..."
+}
+```
+
+The `certification_id` is a numbered identifier that appears on the human-readable certificate page. Free certifications do not receive an ID.
 
 ---
 

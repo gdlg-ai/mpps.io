@@ -83,6 +83,8 @@ curl https://api.mpps.io/v1/verify/mpps_att_8e2f4a1b3c5d4e6f
 | Free certify | 10 / day | None |
 | Paid certify | $0.01 / attestation | Stripe MPP |
 
+Paid certificates include a globally unique `certification_id` (format: `MPPS-YYYYMMDD-NNNNNN-CC`) and a printable certificate page with QR verification.
+
 ## Documentation
 
 - [Protocol Specification](PROTOCOL.md)
