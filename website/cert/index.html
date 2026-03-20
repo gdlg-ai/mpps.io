@@ -3,19 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attestation Certificate — mpps_att_d530a57c095a4d66 — mpps.io</title>
-  <meta name="description" content="Genesis Certificate #1. On March 20, 2026, two days after agents learned to pay, they learned to remember. Independently verifiable.">
-    <link rel="canonical" href="https://mpps.io/cert/">
+  <title>Attestation Certificate — mpps.io</title>
+  <meta name="description" content="Verify and view an mpps.io attestation certificate. Independently verifiable, HSM-signed, stored for 10 years.">
+  <link rel="canonical" href="https://mpps.io/cert/">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://mpps.io/cert/">
-  <meta property="og:title" content="Genesis Certificate #1 — mpps.io">
-  <meta property="og:description" content="On March 20, 2026, two days after agents learned to pay, they learned to remember. Cryptographic attestation certificate.">
+  <meta property="og:title" content="Attestation Certificate — mpps.io">
+  <meta property="og:description" content="Cryptographic attestation certificate. HSM-signed, independently verifiable.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Genesis Certificate #1 — mpps.io">
-  <meta name="twitter:description" content="On March 20, 2026, two days after agents learned to pay, they learned to remember.">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
+  <style>
+    .cert-loading { text-align:center; padding:4rem; color:var(--text-muted); }
+    .cert-card { background:#fafaf9; color:#1a1a1a; max-width:var(--max-w-cert); margin:0 auto; border-radius:8px; padding:40px 48px; position:relative; box-shadow:0 4px 24px rgba(0,0,0,0.3); }
+    .cert-card::before { content:''; position:absolute; inset:8px; border:1px solid #d4d4d8; border-radius:4px; pointer-events:none; }
+    .cert-header { text-align:center; margin-bottom:24px; }
+    .cert-header h1 { font-family:var(--serif); font-size:24px; font-weight:400; letter-spacing:0.05em; margin-bottom:4px; }
+    .cert-issuer { font-family:var(--mono); font-size:13px; color:#71717a; }
+    .cert-divider { border-top:1px solid #d4d4d8; margin:20px 0; }
+    .cert-body { text-align:center; font-size:14px; color:#3f3f46; line-height:1.6; margin-bottom:20px; }
+    .cert-field { margin-bottom:16px; }
+    .cert-field-label { font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:#71717a; margin-bottom:4px; }
+    .cert-field-value { font-family:var(--mono); font-size:13px; color:#1a1a1a; word-break:break-all; }
+    .cert-technical { font-size:12px; color:#52525b; line-height:1.8; }
+    .cert-technical .label { color:#71717a; }
+    .cert-genesis { text-align:center; margin-top:16px; }
+    .cert-genesis .quote { font-style:italic; color:#71717a; font-size:13px; margin:8px 0; }
+    .cert-genesis .issuer { font-size:11px; color:#a1a1aa; margin-top:12px; }
+    .cert-badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px; }
+    .cert-badge.paid { background:#6366f1; color:#fff; }
+    .cert-badge.free { background:#e4e4e7; color:#52525b; }
+    .cert-id { font-family:var(--mono); font-size:16px; font-weight:600; color:#6366f1; text-align:center; margin:8px 0 16px; letter-spacing:0.02em; }
+    .cert-qr-section { display:flex; align-items:center; gap:16px; margin:16px 0; }
+    .cert-qr-text { font-size:12px; color:#71717a; }
+    .cert-qr-text .url { font-family:var(--mono); font-size:11px; color:#52525b; }
+    .cert-actions { text-align:center; margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .cert-note { text-align:center; margin-top:16px; font-size:12px; color:var(--text-dim); }
+    .cert-error { text-align:center; padding:3rem; }
+    .cert-error h2 { color:var(--text); margin-bottom:8px; }
+    .cert-error p { color:var(--text-muted); }
+  </style>
 </head>
 <body>
 
@@ -33,106 +60,144 @@
   </nav>
 
   <div class="cert-page">
+    <a href="/" style="display:inline-block;margin-bottom:1rem;color:var(--text-muted);text-decoration:none;font-size:14px;">← Back to mpps.io</a>
 
-    <a href="/" style="display:inline-block;margin-bottom:1.5rem;color:var(--text-muted);text-decoration:none;font-size:14px;">← Back to mpps.io</a>
-
-    <div class="cert-card">
-
-      <div class="cert-header">
-        <h1>Attestation Certificate</h1>
-        <div class="cert-issuer">mpps.io</div>
-      </div>
-
-      <div class="cert-divider"></div>
-
-      <div class="cert-body">
-        <p>This certifies that on <strong>March 20, 2026 at 06:52:12 UTC</strong><br>
-        the following content fingerprint was submitted<br>
-        and cryptographically attested:</p>
-      </div>
-
-      <div class="cert-field">
-        <div class="cert-field-label">Content Hash</div>
-        <div class="cert-field-value">sha256:2b0a0357f4c629f357fcf97a8febe6b38be78cace22823ae15823d9e723ae3d0</div>
-      </div>
-
-      <div class="cert-field">
-        <div class="cert-field-label">Attestation ID</div>
-        <div class="cert-field-value">mpps_att_d530a57c095a4d66</div>
-      </div>
-
-      <div class="cert-field">
-        <div class="cert-field-label">Agent</div>
-        <div class="cert-field-value">mpps_agent_58ce44d9</div>
-      </div>
-
-      <div class="cert-divider"></div>
-
-      <div class="cert-technical">
-        <span class="label">Signed by:</span> AWS KMS HSM (FIPS 140-2 Level 3)<br>
-        <span class="label">Algorithm:</span> RSA-PSS SHA-256<br>
-        <span class="label">Storage:</span> AWS S3 Object Lock &mdash; COMPLIANCE &mdash; 10 years
-      </div>
-
-      <div class="cert-divider" style="margin: 20px 0;"></div>
-
-      <div class="cert-qr-section">
-        <div class="cert-qr" id="qrcode"></div>
-        <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-        <script>
-          var qr = qrcode(0, 'M');
-          qr.addData('https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66');
-          qr.make();
-          document.getElementById('qrcode').innerHTML = qr.createSvgTag({cellSize: 3, margin: 0});
-        </script>
-        -->
-        <div class="cert-qr-text">
-          Scan to verify independently<br>
-          <span class="url">https://api.mpps.io/v1/verify/<br>mpps_att_d530a57c095a4d66</span>
-        </div>
-      </div>
-
-      <div class="cert-divider"></div>
-
-      <div class="cert-genesis">
-        <p>This is the genesis attestation of mpps.io — Certificate #1.<br>
-        It attests the following statement:</p>
-        <p class="quote">"On March 20, 2026, two days after agents learned to pay, they learned to remember."</p>
-        <p class="issuer">Issued by mpps.io &mdash; GlideLogic Corp. (OTCQB: GDLG)</p>
-      </div>
-
+    <div id="cert-content">
+      <div class="cert-loading">Loading attestation...</div>
     </div>
-
-    <div class="cert-actions">
-      <a href="javascript:window.print()" class="btn btn-secondary btn-sm">Print / Save PDF</a>
-      <a href="https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66" class="btn btn-secondary btn-sm" target="_blank">Download JSON</a>
-      <a href="https://api.mpps.io/v1/verify/mpps_att_d530a57c095a4d66" class="btn btn-primary btn-sm" target="_blank">Verify via API</a>
-    </div>
-
-    <p class="cert-note">This certificate was generated from attestation data stored immutably in AWS S3.</p>
-
   </div>
 
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-inner">
-      <p>mpps.io is an independent open-source project.</p>
-      <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
+      <p>mpps.io is an independent open-source project. Built by GlideLogic Corp. (OTCQB: GDLG).</p>
       <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
-        <span class="sep">·</span>
-        <a href="/privacy.html">Privacy</a>
-        <span class="sep">·</span>
-        <a href="/terms.html">Terms</a>
-        <span class="sep">·</span>
-        <a href="https://api.mpps.io/v1/health" target="_blank">Status</a>
-        <span class="sep">·</span>
-        <a href="mailto:contact@mpps.io">contact@mpps.io</a>
+        <span class="sep">·</span><a href="/privacy.html">Privacy</a>
+        <span class="sep">·</span><a href="/terms.html">Terms</a>
+        <span class="sep">·</span><a href="https://api.mpps.io/v1/health" target="_blank">Status</a>
+        <span class="sep">·</span><a href="mailto:contact@mpps.io">contact@mpps.io</a>
       </div>
       <p class="copyright">© 2026 GlideLogic Corp. MIT License.</p>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uuid = params.get('uuid');
+    const container = document.getElementById('cert-content');
+
+    if (!uuid) {
+      // Default: show genesis certificate
+      loadCert('mpps_att_d530a57c095a4d66');
+    } else {
+      loadCert(uuid);
+    }
+
+    function loadCert(id) {
+      fetch(`https://api.mpps.io/v1/verify/${id}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) {
+            container.innerHTML = `<div class="cert-error"><h2>Attestation Not Found</h2><p>${data.message}</p></div>`;
+            return;
+          }
+          renderCert(data);
+        })
+        .catch(() => {
+          container.innerHTML = `<div class="cert-error"><h2>Error</h2><p>Could not load attestation.</p></div>`;
+        });
+    }
+
+    function renderCert(d) {
+      const isPaid = d.paid || false;
+      const certId = d.certification_id || null;
+      const isGenesis = d.uuid === 'mpps_att_d530a57c095a4d66';
+      const ts = new Date(d.timestamp);
+      const dateStr = ts.toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+      const timeStr = ts.toISOString().replace('T',' ').replace(/\.\d+Z/,' UTC');
+
+      let badgeHtml = '';
+      if (isPaid && certId) {
+        badgeHtml = `<div class="cert-badge paid">Paid Certificate</div><div class="cert-id">${certId}</div>`;
+      } else if (d.certified) {
+        badgeHtml = `<div class="cert-badge free">Attestation Certificate</div>`;
+      }
+
+      let genesisHtml = '';
+      if (isGenesis) {
+        genesisHtml = `
+          <div class="cert-divider"></div>
+          <div class="cert-genesis">
+            <p>This is the genesis attestation of mpps.io — Certificate #1.</p>
+            <p class="quote">"On March 20, 2026, two days after agents learned to pay, they learned to remember."</p>
+          </div>`;
+      }
+
+      let metadataHtml = '';
+      if (d.metadata) {
+        const m = d.metadata;
+        if (m.description) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Description</div><div class="cert-field-value" style="font-family:var(--sans);font-size:14px;">${m.description}</div></div>`;
+        if (m.amount) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Amount</div><div class="cert-field-value">${m.amount}</div></div>`;
+        if (m.parties) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Parties</div><div class="cert-field-value">${m.parties.join(', ')}</div></div>`;
+        if (m.transaction_type) metadataHtml += `<div class="cert-field"><div class="cert-field-label">Type</div><div class="cert-field-value">${m.transaction_type}</div></div>`;
+      }
+
+      // QR code
+      const verifyUrl = `https://api.mpps.io/v1/verify/${d.uuid}`;
+      let qrHtml = '<div id="qr-code"></div>';
+
+      container.innerHTML = `
+        <div class="cert-card">
+          <div class="cert-header">
+            <h1>Attestation Certificate</h1>
+            <div class="cert-issuer">mpps.io</div>
+          </div>
+          <div class="cert-divider"></div>
+          <div style="text-align:center;">${badgeHtml}</div>
+          <div class="cert-body">
+            <p>This certifies that on <strong>${dateStr}</strong> at <strong>${timeStr}</strong><br>
+            the following content fingerprint was submitted and cryptographically attested:</p>
+          </div>
+          <div class="cert-field"><div class="cert-field-label">Content Hash</div><div class="cert-field-value">${d.content_hash}</div></div>
+          <div class="cert-field"><div class="cert-field-label">Attestation ID</div><div class="cert-field-value">${d.uuid}</div></div>
+          <div class="cert-field"><div class="cert-field-label">Agent</div><div class="cert-field-value">${d.agent_id}</div></div>
+          ${metadataHtml}
+          <div class="cert-divider"></div>
+          <div class="cert-technical">
+            <span class="label">Signed by:</span> AWS KMS HSM (FIPS 140-2 Level 3)<br>
+            <span class="label">Algorithm:</span> RSA-PSS SHA-256<br>
+            <span class="label">Storage:</span> AWS S3 Object Lock — COMPLIANCE — 10 years
+          </div>
+          <div class="cert-divider"></div>
+          <div class="cert-qr-section">
+            ${qrHtml}
+            <div class="cert-qr-text">
+              Scan to verify independently<br>
+              <span class="url">${verifyUrl}</span>
+            </div>
+          </div>
+          ${genesisHtml}
+          <div class="cert-divider"></div>
+          <div class="cert-genesis">
+            <p class="issuer">Issued by mpps.io — GlideLogic Corp. (OTCQB: GDLG)</p>
+          </div>
+        </div>
+        <div class="cert-actions">
+          <a href="javascript:window.print()" class="btn btn-secondary btn-sm">Print / Save PDF</a>
+          <a href="${verifyUrl}" class="btn btn-secondary btn-sm" target="_blank">Verify via API</a>
+        </div>
+        <div class="cert-note">This certificate was generated from attestation data stored immutably in AWS S3.</div>
+      `;
+
+      // Render QR
+      var qr = qrcode(0, 'M');
+      qr.addData(verifyUrl);
+      qr.make();
+      document.getElementById('qr-code').innerHTML = qr.createSvgTag({cellSize:3, margin:0});
+    }
+  </script>
 </body>
 </html>

@@ -87,19 +87,24 @@
     <section class="section">
       <div class="section-title">Built for MPP</div>
       <h2>The missing half of every MPP transaction.</h2>
-      <div style="background: var(--bg-elevated); padding: 1.5rem 2rem; border-radius: 6px; font-family: var(--font-mono); font-size: 14px; line-height: 1.5; color: var(--text-muted);">
-        <div style="margin-bottom: 0.8rem;">
-          <span style="color:var(--text);">Agent</span> ─── <span style="color:#6366f1;font-weight:600;">MPP</span> ───▶ <span style="color:var(--text);">Service</span> <span style="color:#4a4a55">(pays $5 for data)</span>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 1rem 0;">
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:8px; padding:20px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); margin-bottom:12px;">Without mpps.io</div>
+          <div style="font-family:var(--mono); font-size:13px; line-height:1.8;">
+            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Agent paid $5</span></div>
+            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">What was delivered?</span></div>
+            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">Was it what was promised?</span></div>
+            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">Who can prove it?</span></div>
+          </div>
         </div>
-        <div style="padding-left: 1rem; border-left: 2px solid #27272a; margin-bottom: 0.6rem;">
-          <div style="padding: 0.3rem 0 0.3rem 1rem;"><span style="color:#22c55e;">MPP Receipt</span> → <span style="color:var(--text);">"$5 paid"</span> <span style="color:#22c55e;">✓</span></div>
-        </div>
-        <div style="margin-bottom: 0.6rem;">
-          └── <span style="color:#6366f1;font-weight:600;">mpps.io</span> ──┘
-        </div>
-        <div style="padding-left: 2rem;">
-          <div><span style="color:#22c55e;">Attestation</span> → <span style="color:var(--text);">"sha256:abc delivered"</span> <span style="color:#22c55e;">✓</span></div>
-          <div style="padding-left: 5.5rem; color:#4a4a55;">→ Complete evidence chain</div>
+        <div style="background:var(--bg-raised); border:1px solid var(--accent); border-radius:8px; padding:20px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:12px;">With mpps.io</div>
+          <div style="font-family:var(--mono); font-size:13px; line-height:1.8;">
+            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Agent paid $5</span> <span style="color:var(--text-dim);">— MPP receipt</span></div>
+            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">sha256:abc delivered</span> <span style="color:var(--text-dim);">— attested</span></div>
+            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">HSM-signed, 10yr lock</span></div>
+            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Anyone can verify</span></div>
+          </div>
         </div>
       </div>
       <p style="margin-top: 1rem;">Every service on <a href="https://mpp.dev/services" target="_blank" style="color: var(--accent);">mpp.dev/services</a> — Anthropic, Exa, fal.ai, OpenRouter — delivers something after payment. mpps.io lets both parties prove exactly what was exchanged.</p>

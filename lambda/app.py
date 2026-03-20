@@ -195,9 +195,26 @@ class CertifyRequest(BaseModel):
             raise ValueError("must start with 'mpps_att_'")
         return v
 
+# ── Certification Counter ────────────────────────────────
+
+def _next_cert_id() -> str:
+    """Atomic increment → MPPS-CERT-000001 format."""
+    try:
+        resp = rate_table.update_item(
+            Key={"pk": "mpps:cert_counter"},
+            UpdateExpression="SET #c = if_not_exists(#c, :zero) + :one",
+            ExpressionAttributeNames={"#c": "count"},
+            ExpressionAttributeValues={":zero": 0, ":one": 1},
+            ReturnValues="UPDATED_NEW",
+        )
+        n = int(resp["Attributes"]["count"])
+        return f"MPPS-CERT-{n:06d}"
+    except Exception:
+        return None
+
 # ── Core: Sign & Store ──────────────────────────────────
 
-def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, certified: bool = False) -> dict:
+def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, certified: bool = False, paid: bool = False) -> dict:
     att_uuid = f"mpps_att_{uuid.uuid4().hex[:16]}"
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     agent_id = f"mpps_agent_{hashlib.sha256(agent_ip.encode()).hexdigest()[:8]}"
@@ -218,14 +235,18 @@ def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, cer
 
     signature = base64.b64encode(sig_response["Signature"]).decode("utf-8")
 
+    cert_id = _next_cert_id() if paid else None
+
     internal = {
         "uuid": att_uuid, "agent_id": agent_id, "content_hash": content_hash,
-        "timestamp": ts, "signature": signature, "certified": certified,
+        "timestamp": ts, "signature": signature, "certified": certified, "paid": paid,
         "storage": {"provider": "aws-s3", "bucket": S3_BUCKET,
                     "lock_mode": "COMPLIANCE", "retention_years": 10},
     }
     if metadata:
         internal["metadata"] = metadata
+    if cert_id:
+        internal["certification_id"] = cert_id
 
     s3_key = f"{S3_PREFIX}/{ts[:10]}/{att_uuid}.json"
     try:
@@ -236,14 +257,16 @@ def _sign_and_store(content_hash: str, agent_ip: str, metadata: dict = None, cer
 
     public = {
         "uuid": att_uuid, "agent_id": agent_id, "content_hash": content_hash,
-        "timestamp": ts, "signature": signature, "certified": certified,
+        "timestamp": ts, "signature": signature, "certified": certified, "paid": paid,
         "storage": {"provider": "aws-s3", "lock_mode": "COMPLIANCE", "retention_years": 10},
         "verify_url": f"https://api.mpps.io/v1/verify/{att_uuid}",
     }
     if metadata:
         public["metadata"] = metadata
+    if cert_id:
+        public["certification_id"] = cert_id
     if certified:
-        public["certificate_url"] = f"https://mpps.io/cert/{att_uuid}"
+        public["certificate_url"] = f"https://mpps.io/cert/?uuid={att_uuid}"
     return public
 
 # ── App ─────────────────────────────────────────────────
@@ -386,7 +409,7 @@ async def certify(req: CertifyRequest, request: Request):
     ch_metadata["payment_currency"] = "usd"
 
     try:
-        receipt = _sign_and_store(challenge_data["content_hash"], ip, metadata=ch_metadata, certified=True)
+        receipt = _sign_and_store(challenge_data["content_hash"], ip, metadata=ch_metadata, certified=True, paid=True)
     except RuntimeError as e:
         return _error("service_error", str(e), 503, rid)
 
@@ -422,14 +445,16 @@ async def verify(att_uuid: str):
                 "uuid": internal["uuid"], "agent_id": internal["agent_id"],
                 "content_hash": internal["content_hash"], "timestamp": internal["timestamp"],
                 "signature": internal["signature"], "certified": internal.get("certified", False),
-                "verified": True,
+                "paid": internal.get("paid", False), "verified": True,
                 "storage": {"provider": "aws-s3", "lock_mode": "COMPLIANCE", "retention_years": 10},
                 "verify_url": f"https://api.mpps.io/v1/verify/{att_uuid}", "request_id": rid,
             }
             if internal.get("metadata"):
                 public["metadata"] = internal["metadata"]
+            if internal.get("certification_id"):
+                public["certification_id"] = internal["certification_id"]
             if internal.get("certified"):
-                public["certificate_url"] = f"https://mpps.io/cert/{att_uuid}"
+                public["certificate_url"] = f"https://mpps.io/cert/?uuid={att_uuid}"
             return _json_response(public, 200, rid)
         except s3.exceptions.NoSuchKey:
             continue
