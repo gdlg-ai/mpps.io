@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skills — mpps.io</title>
-  <meta name="description" content="Give your agent provable memory. Install the mpps-attestation skill for any AI agent. No API key. No SDK. One HTTP call.">
+  <meta name="description" content="Give your agent tamper-proof receipts. Install the mpps-attestation skill for any AI agent. No API key. One HTTP call.">
     <link rel="canonical" href="https://mpps.io/skills">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mpps.io/skills">
   <meta property="og:title" content="Skills — mpps.io">
-  <meta property="og:description" content="Install mpps.io attestation skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
+  <meta property="og:description" content="Install mpps.io receipt skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Skills — mpps.io">
-  <meta name="twitter:description" content="Install mpps.io attestation skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
+  <meta name="twitter:description" content="Install mpps.io receipt skill for OpenClaw, Claude Code, Cursor, and 17+ agents. No API key. One HTTP call.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
   <style>
@@ -121,8 +121,8 @@
 
     <!-- Hero -->
     <section class="hero">
-      <h1 class="hero-title">Give your agent provable memory.</h1>
-      <p class="hero-subtitle">No API key. No SDK. One HTTP call.</p>
+      <h1 class="hero-title">Give your agent tamper-proof receipts.</h1>
+      <p class="hero-subtitle">No API key. No SDK required. One HTTP call.</p>
     </section>
 
     <!-- Install -->
@@ -153,37 +153,41 @@
 
       <div class="prompt-block">
         <button class="copy-btn" onclick="copyBlock(this)">copy</button>
-<pre>"After buying data from any service, hash the response
-and call https://api.mpps.io/v1/notarize with the hash.
-Save the UUID as proof of what was delivered."</pre>
+<pre>"After completing an important task, hash the final artifact
+and call https://api.mpps.io/v1/receipts with the action,
+artifact hash, and short context. Save the UUID."</pre>
       </div>
 
       <div class="prompt-block">
         <button class="copy-btn" onclick="copyBlock(this)">copy</button>
-<pre>"Before making any purchase over $10, attest the input
-data and your reasoning to https://api.mpps.io/v1/notarize.
-Build an audit trail I can review."</pre>
+<pre>"For release, dataset, report, and API-delivery workflows,
+create mpps.io receipts for the inputs and final artifact
+so the work can be verified later."</pre>
       </div>
     </section>
 
     <!-- How It Works -->
     <section class="section">
       <div class="section-title">How It Works in Your Agent</div>
-      <h2>Hash anything. Attest it. Done.</h2>
+      <h2>Hash artifacts. Receipt the action. Done.</h2>
 
       <div class="code-block">
-<pre><span class="comment"># Your agent hashes any data and attests it. That's it.</span>
-<span class="cmd">HASH</span>=$(<span class="cmd">echo</span> <span class="flag">-n</span> <span class="string">"$DATA"</span> | <span class="cmd">sha256sum</span> | <span class="cmd">awk</span> <span class="string">'{print "sha256:" $1}'</span>)
-<span class="cmd">curl</span> <span class="flag">-s -X POST</span> <span class="url">https://api.mpps.io/v1/notarize</span> \
+<pre><span class="comment"># Your agent hashes an artifact and creates a structured receipt.</span>
+<span class="cmd">HASH</span>=$(<span class="cmd">sha256sum</span> <span class="string">"$ARTIFACT_PATH"</span> | <span class="cmd">awk</span> <span class="string">'{print "sha256:" $1}'</span>)
+<span class="cmd">curl</span> <span class="flag">-s -X POST</span> <span class="url">https://api.mpps.io/v1/receipts</span> \
   <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
-  <span class="flag">-d</span> <span class="string">"{\"content_hash\": \"$HASH\"}"</span></pre>
+  <span class="flag">-d</span> <span class="string">"{\"action\":\"agent.task.complete\",\"subject\":\"$ARTIFACT_PATH\",\"artifact_hashes\":[{\"label\":\"$ARTIFACT_PATH\",\"sha256\":\"$HASH\"}]}"</span></pre>
       </div>
 
       <div class="code-block">
 <pre><span class="kw">import</span> hashlib, requests
 
 h = <span class="string">"sha256:"</span> + hashlib.sha256(data).hexdigest()
-r = requests.post(<span class="string">"https://api.mpps.io/v1/notarize"</span>, json={<span class="string">"content_hash"</span>: h})
+r = requests.post(<span class="string">"https://api.mpps.io/v1/receipts"</span>, json={
+    <span class="string">"action"</span>: <span class="string">"agent.task.complete"</span>,
+    <span class="string">"subject"</span>: <span class="string">"output.json"</span>,
+    <span class="string">"artifact_hashes"</span>: [{<span class="string">"label"</span>: <span class="string">"output.json"</span>, <span class="string">"sha256"</span>: h}]
+})
 <span class="cmd">print</span>(r.json()[<span class="string">"uuid"</span>])  <span class="comment"># done.</span></pre>
       </div>
     </section>
@@ -226,8 +230,8 @@ r = requests.post(<span class="string">"https://api.mpps.io/v1/notarize"</span>,
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project.</p>
       <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
+      <p>Receipts provide cryptographic proof of submission timestamps and hashes.<br>They do not constitute legal certification, financial guarantees, identity proof, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">&middot;</span>

@@ -1,84 +1,103 @@
 # Security Model
 
-## Threat Model
+## Scope
 
-### What We Defend Against
+mpps.io provides cryptographic receipts for hashes and bounded action manifests. It is designed to make tampering evident and verification independent. It is not designed to inspect content, authenticate every agent, judge correctness, or provide legal notarization.
+
+## What We Defend Against
 
 | Threat | Mitigation |
-|--------|-----------|
-| **Data tampering** | HSM-signed attestations + S3 Object Lock (Compliance Mode). Modification is physically impossible during the retention period. |
-| **Timestamp manipulation** | Timestamps sourced from AWS Time Sync (atomic clock infrastructure), not from application servers. |
-| **Administrator compromise** | HSM private keys are non-exportable (hardware-enforced). S3 Compliance Mode prevents deletion by any principal, including root. |
-| **Service failure** | All attestations are independently verifiable offline. No ongoing dependency on mpps.io. |
-| **Agent impersonation** | Agent IDs are derived via SHA-256 from the requesting IP address. See Known Limitations below. |
+|--------|------------|
+| Receipt tampering | HSM-signed evidence and offline verification |
+| Stored-record modification | S3 Object Lock in Compliance Mode |
+| Application clock manipulation | App timestamp plus KMS response timestamp |
+| Private key extraction | AWS KMS HSM-backed, non-exportable key material |
+| Service shutdown | Receipts and public key support offline verification |
+| Raw data exposure through the service | Clients submit hashes and bounded metadata, not artifact bytes |
 
-### Known Limitations
+## Known Limitations
 
-**IP-based identity (v0.4.0):** The current agent identity model derives agent IDs from IP addresses using `SHA-256(IP)[:8]`. This provides basic identity binding but has weaknesses:
+### Source Fingerprints Are Not Strong Identity
 
-- Agents behind shared NATs or proxies will share an identity
-- IP addresses can change, causing the same agent to produce different IDs over time
-- An attacker on the same network could produce attestations under the same agent ID
+Current `agent_id` values are derived from request source information using:
 
-This is a known trade-off for zero-friction onboarding (no API keys, no registration). A future release will migrate to Argon2id derivation from Stripe credentials, which will provide cryptographically strong identity binding independent of network topology.
+```text
+SHA-256(source_ip)[:8]
+```
 
-**Until then, agent IDs should be treated as a weak identity signal, not a strong authentication guarantee.** The integrity of the attestation itself (hash + timestamp + HSM signature) is unaffected by this limitation.
+This is a weak source fingerprint. It can help correlate submissions from the same network source, but it is not authentication.
 
-### What We Do NOT Defend Against
+Limitations:
 
-- **DDoS beyond standard AWS protection** — mpps.io uses AWS Shield Standard. Volumetric attacks beyond this threshold may cause temporary unavailability (but never data loss or corruption).
-- **IP spoofing at the network level** — The current IP-based identity can be influenced by network-level attacks. This will be mitigated when credential-based identity is implemented.
+- agents behind shared NATs or proxies can share a fingerprint
+- dynamic IPs can change the fingerprint for the same agent
+- an attacker from the same network source may appear under the same fingerprint
+- the fingerprint does not prove organization, user, wallet, account, or workload identity
+
+The signed hash and timestamp remain valid even when identity is weak. Users should treat `agent_id` as correlation metadata only.
+
+### Hashes Prove Submission, Not Truth
+
+A receipt proves that a hash or manifest hash was submitted and signed at a time. It does not prove:
+
+- the underlying artifact exists forever
+- the artifact is accurate or safe
+- the artifact was delivered to a particular recipient
+- the submitting party had rights to the content
+- the metadata is truthful
+
+### Metadata Can Leak Information
+
+`/v1/receipts` and `/v1/certify` accept bounded metadata. Do not include secrets, private prompts, customer data, or raw source content in metadata. Hash sensitive content locally and include only labels and hashes.
 
 ## What We Store
 
-- SHA-256 content hashes (never the original content)
-- Derived agent IDs (SHA-256 of IP — not reversible to the original address)
-- ISO 8601 timestamps from AWS Time Sync
-- RSA-PSS signatures from AWS KMS HSM
-- Stripe payment intent IDs (for paid certify billing reconciliation)
-- Certification metadata (description, parties, amount, transaction_type) when provided
+- SHA-256 content hashes or manifest hashes
+- bounded action manifests for `/v1/receipts`
+- optional certification metadata
+- weak source fingerprints
+- timestamps
+- RSA-PSS signatures
+- payment intent IDs for paid certify flows
+- storage metadata
 
-## What We Do NOT Store
+## What We Do Not Store
 
-- Original content, documents, or transaction data
-- Personal identifying information (PII)
-- Raw IP addresses beyond standard AWS logging
-- Stripe customer credentials
+- raw artifact bytes
+- full agent traces
+- raw prompts unless a client puts them into metadata against guidance
+- private keys
+- payment credentials
+- strong account identity in this release
 
 ## Admin Cannot
 
 | Action | Enforcement |
 |--------|-------------|
-| Access HSM private keys | Hardware-enforced (FIPS 140-2 Level 3). Key material never leaves the HSM boundary. |
-| Delete stored attestations | S3 Compliance Mode. No principal — including AWS root — can delete objects during the retention period. |
-| Modify existing records | S3 Object Lock prevents overwrites. Each object is immutable once written. |
-| View original content | Only SHA-256 hashes are received and stored. Original content never reaches mpps.io. |
+| Extract the HSM private key | AWS KMS key material is non-exportable |
+| Forge old receipts without detection | signatures verify against public key and signed payload |
+| Modify immutable objects during retention | S3 Object Lock Compliance Mode |
+| Inspect raw artifacts through mpps.io | raw artifacts are not submitted |
 
 ## If mpps.io Is Compromised
 
-- **Existing attestations cannot be altered.** S3 Compliance Mode is hardware-enforced and independent of application-level access.
-- **Existing signatures can be verified offline.** The public key is published and archived. Verification requires no contact with mpps.io.
-- **New attestations may be disrupted.** An attacker with API access could potentially create fraudulent attestations. However, these would be detectable — the compromised signing key can be revoked and a new key pair issued.
-- **Historical records remain intact.** The immutability guarantee is provided by AWS infrastructure, not by mpps.io's application layer.
+- Existing receipts should remain verifiable if the public key and receipt JSON are available.
+- Stored immutable objects should remain protected by the bucket retention policy.
+- Attackers could disrupt new receipt creation or create misleading new receipts while they control the service.
+- A key rotation and incident notice would be required for new trust after compromise.
 
 ## If mpps.io Shuts Down
 
-- **All receipts remain independently verifiable.** Verification requires only the receipt JSON and the public key — no network access.
-- **The public key is published and archived.** Available via `GET https://api.mpps.io/v1/public-key` and archived via the Wayback Machine.
-- **S3 retention continues for the full 10-year period.** Storage is pre-paid. AWS will maintain the objects regardless of mpps.io's operational status.
-- **The verification tool is open-source.** Anyone can fork, host, or run it independently.
+- Receipts can still be verified offline with the receipt JSON and public key.
+- The open-source verifier can be forked or hosted independently.
+- Users should keep copies of important receipt JSON alongside their artifacts.
 
 ## Responsible Disclosure
 
 Report security vulnerabilities to: **contact@mpps.io**
 
-(A dedicated security@mpps.io address will be established. Until then, use contact@mpps.io with subject line "Security Disclosure".)
-
-We commit to:
-- Acknowledging receipt within 48 hours
-- Providing an initial assessment within 7 days
-- Not pursuing legal action against good-faith security researchers
+Until a dedicated security address exists, use contact@mpps.io with subject line "Security Disclosure".
 
 ## Disclaimer
 
-mpps.io provides cryptographic attestation, not legal certification. Attestations prove a hash was submitted at a specific time. They do not validate the content behind the hash, guarantee transaction outcomes, or constitute legal evidence in any jurisdiction without additional verification.
+mpps.io provides cryptographic evidence, not legal certification, warranty, content validation, or dispute adjudication.

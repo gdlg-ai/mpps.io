@@ -3,32 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mpps.io — Proof of delivery for the Machine Payments Protocol</title>
-  <meta name="description" content="MPP receipts prove money moved. mpps.io proves what was delivered. Cryptographic attestation for agent-to-agent commerce — HSM-signed, stored for 10 years, independently verifiable. Free.">
+  <title>mpps.io - Tamper-proof receipts for AI agent work</title>
+  <meta name="description" content="Create HSM-signed, immutable receipts for AI agent actions, generated artifacts, workflow outputs, and delivery evidence. No API key. Hash-only. Independently verifiable.">
   <link rel="canonical" href="https://mpps.io/">
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mpps.io/">
-  <meta property="og:title" content="mpps.io — Proof of delivery for the Machine Payments Protocol">
-  <meta property="og:description" content="Agents pay. mpps.io proves what happened. Free, HSM-signed attestation for agent commerce. One HTTP call. Stored 10 years.">
+  <meta property="og:title" content="mpps.io - Tamper-proof receipts for AI agent work">
+  <meta property="og:description" content="Hash an artifact or action manifest. Get an HSM-signed receipt. Verify it later.">
   <meta property="og:site_name" content="mpps.io">
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="mpps.io — Proof of delivery for MPP">
-  <meta name="twitter:description" content="Agents pay. mpps.io proves what happened. Free attestation, one HTTP call, HSM-signed, stored 10 years.">
-  <!-- JSON-LD Structured Data -->
+  <meta name="twitter:title" content="mpps.io - Agent action receipts">
+  <meta name="twitter:description" content="HSM-signed receipts for AI agent work. No API key. Hash-only. Stored for 10 years.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "mpps.io",
     "url": "https://mpps.io",
-    "description": "Cryptographic attestation for agent-to-agent commerce. Proof of delivery for every MPP transaction.",
+    "description": "HSM-signed, immutable receipts for AI agent actions, generated artifacts, workflow outputs, and delivery evidence.",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any (HTTP API)",
+    "operatingSystem": "Any HTTP client",
     "offers": [
-      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free tier: 10 attestations/hour"},
-      {"@type": "Offer", "price": "0.01", "priceCurrency": "USD", "description": "Certified attestation via MPP"}
+      {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free tier: 10 receipts/hour and 10 certified receipts/day"},
+      {"@type": "Offer", "price": "0.01", "priceCurrency": "USD", "description": "Optional certified receipt after free daily quota"}
     ],
     "author": {
       "@type": "Organization",
@@ -38,7 +35,7 @@
     },
     "license": "https://opensource.org/licenses/MIT",
     "isAccessibleForFree": true,
-    "keywords": "attestation, MPP, machine payments, agent commerce, proof of delivery, HSM, cryptographic proof"
+    "keywords": "AI agent receipts, provenance, artifact hash, HSM, verification"
   }
   </script>
   <link rel="stylesheet" href="css/style.css">
@@ -46,7 +43,6 @@
 </head>
 <body>
 
-  <!-- Nav -->
   <nav class="nav">
     <div class="nav-inner">
       <a href="/" class="nav-logo">mpps.io</a>
@@ -62,269 +58,208 @@
 
   <div class="content">
 
-    <!-- Hero -->
     <section class="hero">
       <h1 class="hero-title">mpps.io</h1>
-      <p class="hero-subtitle">Proof of delivery for the Machine Payments Protocol.</p>
-      <p class="hero-tagline">MPP receipts prove money moved. mpps.io proves what was delivered.</p>
-      <p style="color: var(--text-muted); font-size: 14px; margin-top: 0.5rem;">Free. MPP-native. Open source.</p>
+      <p class="hero-subtitle">Tamper-proof receipts for AI agent work.</p>
+      <p class="hero-tagline">Hash the artifact or action manifest. Get an HSM-signed receipt. Verify it later.</p>
+      <p style="color: var(--text-muted); font-size: 14px; margin-top: 0.5rem;">No API key. Hash-only. Stored for 10 years.</p>
       <div class="hero-actions">
-        <a href="#try-it" class="btn btn-primary">Try it — free</a>
+        <a href="#try-it" class="btn btn-primary">Create a receipt</a>
         <a href="https://github.com/gdlg-ai/mpps.io" class="btn btn-secondary" target="_blank">GitHub</a>
-        <a href="/cert/" class="btn btn-ghost">Genesis Certificate #1 →</a>
+        <a href="/verify.html" class="btn btn-ghost">Verify receipt</a>
       </div>
     </section>
 
-    <!-- The Problem -->
     <section class="section">
-      <div class="section-title">The Problem</div>
-      <p>Your agent pays $200 via MPP for API data. The vendor says they delivered. Your agent says the data was wrong. Who's right?</p>
-      <p>MPP receipts prove money moved. They don't prove what was delivered, what was promised, or what decision led to the payment.</p>
-      <p>Without a neutral third party, it's your agent's word against theirs. Every MPP transaction. Every time.</p>
+      <div class="section-title">The Need</div>
+      <h2>Agents produce work faster than organizations can audit it.</h2>
+      <p>An agent writes a patch, generates a report, builds a dataset, calls an API, or publishes a package. A week later someone asks what was produced, which inputs were attached, and whether the record changed.</p>
+      <p>Logs are local. Chat transcripts are noisy. CI artifacts expire. mpps.io gives the workflow a small external evidence anchor: a signed receipt for the hash of what happened.</p>
     </section>
 
-    <!-- The MPP Ecosystem -->
     <section class="section">
-      <div class="section-title">Built for MPP</div>
-      <h2>The missing half of every MPP transaction.</h2>
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 1rem 0;">
-        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:8px; padding:20px;">
-          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); margin-bottom:12px;">Without mpps.io</div>
-          <div style="font-family:var(--mono); font-size:13px; line-height:1.8;">
-            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Agent paid $5</span></div>
-            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">What was delivered?</span></div>
-            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">Was it what was promised?</span></div>
-            <div><span style="color:#ef4444;">✗</span> <span style="color:var(--text-muted);">Who can prove it?</span></div>
-          </div>
-        </div>
-        <div style="background:var(--bg-raised); border:1px solid var(--accent); border-radius:8px; padding:20px;">
-          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:12px;">With mpps.io</div>
-          <div style="font-family:var(--mono); font-size:13px; line-height:1.8;">
-            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Agent paid $5</span> <span style="color:var(--text-dim);">— MPP receipt</span></div>
-            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">sha256:abc delivered</span> <span style="color:var(--text-dim);">— attested</span></div>
-            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">HSM-signed, 10yr lock</span></div>
-            <div><span style="color:#22c55e;">✓</span> <span style="color:var(--text-muted);">Anyone can verify</span></div>
-          </div>
-        </div>
-      </div>
-      <p style="margin-top: 1rem;">Every service on <a href="https://mpp.dev/services" target="_blank" style="color: var(--accent);">mpp.dev/services</a> — Anthropic, Exa, fal.ai, OpenRouter — delivers something after payment. mpps.io lets both parties prove exactly what was exchanged.</p>
-    </section>
-
-    <!-- What mpps.io Does -->
-    <section class="section">
-      <div class="section-title">What mpps.io Does</div>
-      <h2>One API call. One immutable proof.</h2>
-      <p>After any MPP transaction, your agent hashes the delivered content, sends the hash to mpps.io, and gets back a signed receipt — timestamped, stored for 10 years, independently verifiable.</p>
-      <p>We never see your data. Only its fingerprint. If mpps.io shuts down tomorrow, your attestations remain valid — the verifier is open-source, the public key is published, your evidence outlives us.</p>
-    </section>
-
-    <!-- How It Works -->
-    <section class="section">
-      <div class="section-title">How It Works</div>
+      <div class="section-title">What It Is</div>
+      <h2>A receipt layer, not another orchestration stack.</h2>
       <div class="steps">
         <div class="step">
-          <div class="step-num">①</div>
-          <div class="step-label">Hash</div>
-          <div class="step-desc">Your agent computes SHA-256 of any content locally. Raw data never leaves the agent.</div>
+          <div class="step-num">1</div>
+          <div class="step-label">Describe</div>
+          <div class="step-desc">Name the action and attach hashes for generated artifacts, inputs, or parent receipts.</div>
         </div>
         <div class="step">
-          <div class="step-num">②</div>
-          <div class="step-label">Attest</div>
-          <div class="step-desc">Hash is sent to mpps.io. Signed by hardware security module, timestamped, locked in immutable storage.</div>
+          <div class="step-num">2</div>
+          <div class="step-label">Anchor</div>
+          <div class="step-desc">mpps.io canonicalizes the manifest, signs its hash through AWS KMS, and stores the receipt.</div>
         </div>
         <div class="step">
-          <div class="step-num">③</div>
+          <div class="step-num">3</div>
           <div class="step-label">Verify</div>
-          <div class="step-desc">Anyone can verify the attestation independently — via API, on the web, or fully offline. No account needed.</div>
+          <div class="step-desc">Anyone can verify the signature and recompute the manifest hash later.</div>
         </div>
+      </div>
+      <p>mpps.io complements agent traces, build logs, package provenance, and content credentials. It does not replace them. It gives those systems a compact, independently verifiable receipt.</p>
+    </section>
+
+    <section class="section" id="try-it">
+      <div class="section-title">Try It</div>
+      <h2>Create a structured agent action receipt.</h2>
+      <p>The API is live. No registration, no token, no SDK required.</p>
+      <div class="code-block">
+<pre><span class="cmd">curl</span> <span class="flag">-X POST</span> <span class="url">https://api.mpps.io/v1/receipts</span> \
+  <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="string">'{
+    "action": "agent.task.complete",
+    "subject": "final-report.md",
+    "artifact_hashes": [
+      {
+        "label": "final-report.md",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "context": {
+      "runner": "codex",
+      "repo": "gdlg-ai/example",
+      "commit": "abc123"
+    }
+  }'</span></pre>
+      </div>
+      <div class="code-block">
+<pre>{
+  <span class="string">"uuid"</span>: <span class="string">"mpps_att_8e2f4a1b3c5d4e6f"</span>,
+  <span class="string">"receipt_type"</span>: <span class="string">"agent_action"</span>,
+  <span class="string">"manifest_hash"</span>: <span class="string">"sha256:..."</span>,
+  <span class="string">"signature"</span>: <span class="string">"&lt;base64&gt;"</span>,
+  <span class="string">"verify_url"</span>: <span class="string">"https://api.mpps.io/v1/verify/mpps_att_..."</span>
+}</pre>
       </div>
     </section>
 
-    <!-- Three Principles -->
     <section class="section">
-      <div class="section-title">Three Principles</div>
+      <div class="section-title">Use Cases</div>
+      <h2>Receipts for work that should not rely on memory.</h2>
       <div class="principles">
         <div class="principle">
-          <div class="principle-name">don't look</div>
-          <p>We receive SHA-256 hashes, never original data. Your business logic, your content, your secrets — they stay on your servers. By design.</p>
+          <div class="principle-name">agent completion</div>
+          <p>Attach a receipt to the final artifact of a code change, analysis, report, image, video, or dataset.</p>
         </div>
         <div class="principle">
-          <div class="principle-name">don't judge</div>
-          <p>We don't evaluate, interpret, or validate your content. An attestation proves a submission existed at a point in time. That's all.</p>
+          <div class="principle-name">release evidence</div>
+          <p>Anchor build outputs, package manifests, deployment bundles, and verification material.</p>
         </div>
         <div class="principle">
-          <div class="principle-name">don't delete</div>
-          <p>Attestations are stored in AWS S3 Object Lock (Compliance Mode). They cannot be modified or deleted — not by us, not by anyone — for 10 years.</p>
+          <div class="principle-name">delivery trail</div>
+          <p>Record what was sent or received after API calls, data transfers, paid workflows, or handoffs.</p>
         </div>
       </div>
     </section>
 
-    <!-- Under the Hood -->
     <section class="section">
-      <div class="section-title">Under the Hood</div>
-      <h2>Five-layer trust chain</h2>
+      <div class="section-title">Trust Boundary</div>
+      <h2>Precise proof, deliberately narrow claims.</h2>
       <div class="trust-chain">
         <div class="trust-layer">
-          <span class="trust-layer-name">Identity</span>
-          <span class="trust-layer-desc">Derived agent IDs via SHA-256 hashing. Pseudonymous, consistent. Argon2id from Stripe credentials planned.</span>
+          <span class="trust-layer-name">Hash-only input</span>
+          <span class="trust-layer-desc">Raw private artifacts do not need to leave your environment.</span>
         </div>
         <div class="trust-layer">
-          <span class="trust-layer-name">Timestamp</span>
-          <span class="trust-layer-desc">Dual timestamps: application time + AWS KMS infrastructure time from the signing operation. Cross-verifiable. Millisecond resolution.</span>
+          <span class="trust-layer-name">Manifest hash</span>
+          <span class="trust-layer-desc">Structured receipts are canonicalized before signing, so the manifest can be recomputed later.</span>
+        </div>
+        <div class="trust-layer">
+          <span class="trust-layer-name">Source fingerprint</span>
+          <span class="trust-layer-desc">The <code>agent_id</code> is useful correlation from network source data, not strong identity.</span>
         </div>
         <div class="trust-layer">
           <span class="trust-layer-name">Signature</span>
-          <span class="trust-layer-desc">RSA-PSS SHA-256 via AWS KMS HSM. FIPS 140-2 Level 3 certified. Private keys never leave hardware.</span>
+          <span class="trust-layer-desc">RSA-PSS SHA-256 via AWS KMS HSM. Public-key verification works offline.</span>
         </div>
         <div class="trust-layer">
-          <span class="trust-layer-name">Storage</span>
-          <span class="trust-layer-desc">AWS S3 Object Lock in Compliance Mode. Write-once, read-many. 10-year retention. Tamper-proof.</span>
+          <span class="trust-layer-name">Retention</span>
+          <span class="trust-layer-desc">Receipts are stored in AWS S3 Object Lock, Compliance Mode, with 10-year retention.</span>
+        </div>
+      </div>
+      <p>mpps.io does not prove content quality, truth, legality, authorship, or delivery success. It proves that a hash or bounded manifest was submitted, signed, timestamped, and retained.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-title">Fit</div>
+      <h2>Small enough to add after the work is done.</h2>
+      <ul class="agent-features">
+        <li>Agent frameworks: add a receipt after tool calls, file writes, or final responses.</li>
+        <li>CI/CD: receipt build outputs and deployment manifests without changing the build system.</li>
+        <li>Data workflows: receipt the exact dataset or response hash that downstream systems consumed.</li>
+        <li>Skills and plugins: publish a receipt UUID beside the package users install.</li>
+        <li>Payment or procurement workflows: link the paid event as context, but keep mpps.io independent of any payment protocol.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="section-title">API Surface</div>
+      <h2>Three receipt modes.</h2>
+      <div class="trust-chain">
+        <div class="trust-layer">
+          <span class="trust-layer-name">/v1/receipts</span>
+          <span class="trust-layer-desc">Structured agent action receipt with action, artifact hashes, input hashes, context, and parent UUID.</span>
         </div>
         <div class="trust-layer">
-          <span class="trust-layer-name">Verification</span>
-          <span class="trust-layer-desc">Open-source verifier. Works offline after one-time public key fetch. No account, no credentials. Your evidence outlives us.</span>
+          <span class="trust-layer-name">/v1/notarize</span>
+          <span class="trust-layer-desc">Raw hash receipt for the simplest use case.</span>
+        </div>
+        <div class="trust-layer">
+          <span class="trust-layer-name">/v1/certify</span>
+          <span class="trust-layer-desc">Raw hash receipt with richer metadata and a human-readable certificate page.</span>
         </div>
       </div>
     </section>
 
-    <!-- Try It -->
-    <section class="section" id="try-it">
-      <div class="section-title">Try It</div>
-      <h2>Three lines. That's it.</h2>
-      <p>The API is live. No registration. No API key. No SDK required.</p>
-      <div class="code-block">
-<pre><span class="comment"># Hash your content, attest it, done.</span>
-<span class="cmd">curl</span> <span class="flag">-X POST</span> <span class="url">https://api.mpps.io/v1/notarize</span> \
-  <span class="flag">-H</span> <span class="string">"Content-Type: application/json"</span> \
-  <span class="flag">-d</span> <span class="string">'{"content_hash":"sha256:YOUR_HASH_HERE"}'</span></pre>
-      </div>
-      <p style="margin-top: 1rem;">Or in Python:</p>
-      <div class="code-block">
-<pre><span class="kw">import</span> hashlib, requests
-
-data = <span class="string">b"your important data here"</span>
-h = <span class="string">"sha256:"</span> + hashlib.sha256(data).hexdigest()
-
-r = requests.post(<span class="string">"https://api.mpps.io/v1/notarize"</span>, json={<span class="string">"content_hash"</span>: h})
-<span class="cmd">print</span>(r.json()[<span class="string">"uuid"</span>])  <span class="comment"># done. HSM-signed. 10 years. immutable.</span></pre>
-      </div>
-    </section>
-
-    <!-- MPP Native -->
-    <section class="section">
-      <div class="section-title">MPP Native</div>
-      <h2>Standard 402 payment flow. Works with any MPP client.</h2>
-      <p>mpps.io implements the <a href="https://mpp.dev" target="_blank" style="color: var(--accent);">Machine Payments Protocol</a> natively. Certified attestations ($0.01) use the standard HTTP 402 challenge-credential-receipt flow. Any agent with a Tempo wallet or Stripe integration can pay.</p>
-      <div class="code-block">
-<pre><span class="comment"># Agent requests certified attestation → gets 402</span>
-<span class="cmd">POST</span> <span class="url">/v1/certify</span>  →  <span class="flag">402</span> Payment Required
-                     <span style="color:var(--text-muted)">WWW-Authenticate: Payment realm="mpps.io" amount="0.01"</span>
-
-<span class="comment"># Agent pays via MPP (Stripe card or Tempo USDC) → retries</span>
-<span class="cmd">POST</span> <span class="url">/v1/certify</span>  +  <span class="flag">Authorization: Payment &lt;credential&gt;</span>
-                     →  <span style="color:#22c55e">200</span> + certified receipt + <span style="color:var(--text-muted)">Payment-Receipt header</span></pre>
-      </div>
-      <p style="margin-top: 1rem;">Service discovery via <a href="https://api.mpps.io/llms.txt" style="color: var(--accent);">api.mpps.io/llms.txt</a> — agents find us automatically.</p>
-    </section>
-
-    <!-- Use Cases -->
-    <section class="section" id="use-cases">
-      <div class="section-title">Use Cases</div>
-      <h2>After every MPP transaction, there's something to prove.</h2>
-
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h3>After paying via MPP — prove what was delivered</h3>
-          <p>Your agent paid $50 via MPP for data. The vendor attests the delivered content hash with mpps.io. Now you have two receipts: the MPP receipt proves money moved, the mpps.io attestation proves what was sent.</p>
-          <code class="step-flow">MPP pays → vendor delivers → vendor attests hash → buyer verifies</code>
-        </div>
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h3>After receiving via MPP — prove what arrived</h3>
-          <p>Your agent received data from an MPP service. Hash it. Attest it. Now you have an immutable delivery receipt — proof of exactly what arrived, independent of what the vendor claims.</p>
-          <code class="step-flow">MPP pays → data arrives → buyer attests received hash → independent proof</code>
-        </div>
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h3>Before spending via MPP — prove the decision chain</h3>
-          <p>Your agent is about to spend $500 via MPP. Attest the input data, the analysis, the action. When your boss asks "why did you spend that?", every step has independent, timestamped proof.</p>
-          <code class="step-flow">Attest input → attest decision → MPP pays → attest result → full audit trail</code>
-        </div>
-        <div class="step-card">
-          <div class="step-num">4</div>
-          <h3>Before installing — prove the code is clean</h3>
-          <p>You publish a skill or API on the MPP ecosystem. Hash your release, attest it. Users verify the hash before running. If the hash doesn't match, the code was tampered with.</p>
-          <code class="step-flow">Author attests release hash → publishes UUID → users verify before install</code>
-        </div>
-      </div>
-    </section>
-
-    <!-- Genesis Certificate -->
-    <section class="section">
-      <div class="section-title">Genesis Certificate</div>
-      <div class="genesis-block">
-        <p style="color: var(--text-muted); font-size: 15px; font-style: italic;">"On March 20, 2026, two days after agents learned to pay, they learned to remember."</p>
-        <div class="uuid">mpps_att_d530a57c095a4d66</div>
-        <a href="/cert/" class="btn btn-secondary btn-sm">View Certificate →</a>
-        <p class="quote">"Trust the math, not the notary."</p>
-      </div>
-    </section>
-
-    <!-- Pricing -->
     <section class="section" id="pricing">
       <div class="section-title">Pricing</div>
       <div class="pricing-grid">
         <div class="pricing-card">
           <div class="pricing-tier">Free</div>
-          <div class="pricing-price">$0 <span>/ forever</span></div>
+          <div class="pricing-price">$0 <span>/ no signup</span></div>
           <ul class="pricing-features">
-            <li>10 attestations per hour</li>
-            <li>10 certified attestations per day</li>
-            <li>HSM-signed (FIPS 140-2 Level 3)</li>
-            <li>Immutably stored for 10 years</li>
-            <li>No registration required</li>
+            <li>10 structured receipts per hour</li>
+            <li>10 raw hash receipts per hour</li>
+            <li>10 certified metadata receipts per day</li>
+            <li>HSM-signed receipts</li>
+            <li>10-year immutable storage</li>
           </ul>
         </div>
         <div class="pricing-card featured">
-          <div class="pricing-tier">Certified via MPP</div>
-          <div class="pricing-price">$0.01 <span>/ attestation</span></div>
+          <div class="pricing-tier">Optional Certify</div>
+          <div class="pricing-price">$0.01 <span>/ after free quota</span></div>
           <ul class="pricing-features">
-            <li>After 10 free/day — unlimited</li>
+            <li>Stripe-backed 402 payment challenge</li>
             <li>Rich metadata support</li>
-            <li>Human-readable certificates</li>
-            <li>Attestation chains (parent_uuid)</li>
-            <li>Pay via MPP — card or USDC on Tempo</li>
+            <li>Human-readable certificate page</li>
+            <li>Parent receipt chaining</li>
+            <li>No dependency for normal receipt use</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- For Agents -->
     <section class="section">
-      <div class="section-title">Integration</div>
-      <h2>Works with every MPP client.</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Any agent with a Tempo wallet, mppx, or Stripe integration can use mpps.io. No signup. No API keys. Just HTTP.</p>
+      <div class="section-title">Install</div>
+      <h2>Use HTTP directly or install the agent skill.</h2>
       <ul class="agent-features">
         <li>Service discovery: <a href="https://api.mpps.io/llms.txt">api.mpps.io/llms.txt</a></li>
-        <li>MPP-native: standard 402 payment flow, Payment-Receipt headers</li>
-        <li>Payment methods: Stripe (card) + Tempo (USDC on-chain)</li>
-        <li>Open source: <a href="https://github.com/gdlg-ai/mpps.io" target="_blank" style="color: var(--accent);">github.com/gdlg-ai/mpps.io</a> (MIT)</li>
+        <li>Open source: <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">github.com/gdlg-ai/mpps.io</a> (MIT)</li>
         <li>OpenClaw: <code style="font-size:12px;background:#1a1a2e;padding:2px 6px;border-radius:3px;">npx clawhub install mpps-attestation</code></li>
-        <li>skills.sh (17+ agents): <code style="font-size:12px;background:#1a1a2e;padding:2px 6px;border-radius:3px;">npx skills add gdlg-ai/mpps.io</code></li>
-        <li><a href="/skills.html" style="color: var(--accent);">All installation options →</a></li>
+        <li>skills.sh: <code style="font-size:12px;background:#1a1a2e;padding:2px 6px;border-radius:3px;">npx skills add gdlg-ai/mpps.io</code></li>
+        <li><a href="/skills.html">All installation options</a></li>
       </ul>
     </section>
 
   </div>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project.</p>
       <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
+      <p>Receipts provide cryptographic proof of submission timestamps and hashes.<br>They do not constitute legal certification, financial guarantees, identity proof, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">·</span>

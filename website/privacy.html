@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — mpps.io</title>
-  <meta name="description" content="Privacy policy for mpps.io cryptographic attestation service.">
+  <meta name="description" content="Privacy policy for mpps.io cryptographic receipt service.">
     <link rel="canonical" href="https://mpps.io/privacy">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mpps.io/privacy">
   <meta property="og:title" content="Privacy Policy — mpps.io">
-  <meta property="og:description" content="mpps.io privacy policy. We collect only SHA-256 hashes, never original content.">
+  <meta property="og:description" content="mpps.io privacy policy. We collect hashes and bounded receipt metadata, never original artifacts.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Privacy Policy — mpps.io">
-  <meta name="twitter:description" content="mpps.io privacy policy. We collect only SHA-256 hashes, never original content.">
+  <meta name="twitter:description" content="mpps.io privacy policy. We collect hashes and bounded receipt metadata, never original artifacts.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
 </head>
@@ -39,15 +39,16 @@
 
     <h2>What We Collect</h2>
     <ul>
-      <li>SHA-256 content hashes submitted via the attestation API</li>
-      <li>Stripe payment metadata (transaction IDs, amounts, timestamps) for paid attestations</li>
-      <li>Server-side timestamps at the time of attestation</li>
-      <li>Derived agent IDs generated via Argon2 hashing — pseudonymous and unlinkable to real-world identity</li>
+      <li>SHA-256 content hashes and structured receipt manifests submitted via the API</li>
+      <li>Small labels and context fields included by the caller</li>
+      <li>Stripe payment metadata (transaction IDs, amounts, timestamps) for optional paid certify flows</li>
+      <li>Server-side timestamps at the time of receipt creation</li>
+      <li>Derived source fingerprints generated from request source information for rate limiting and correlation</li>
     </ul>
 
     <h2>What We Do NOT Collect</h2>
     <ul>
-      <li>Original content — only SHA-256 hashes are submitted; raw data never reaches our servers</li>
+      <li>Original artifacts — raw files do not need to reach our servers</li>
       <li>Personally identifiable information (PII) beyond Stripe payment metadata</li>
       <li>Cookies beyond essential session and security cookies</li>
       <li>IP addresses beyond standard 30-day server log retention</li>
@@ -55,19 +56,19 @@
 
     <h2>How We Use Data</h2>
     <ul>
-      <li>Create cryptographically signed attestation records</li>
-      <li>Verify attestation authenticity via the public verification API</li>
+      <li>Create cryptographically signed receipt records</li>
+      <li>Verify receipt authenticity via the public verification API</li>
       <li>Enforce rate limits and prevent service abuse</li>
     </ul>
 
     <h2>Retention</h2>
-    <p>Attestation records are stored for 10 years in AWS S3 Object Lock (Compliance Mode). This storage is write-once, read-many — records cannot be modified or deleted during the retention period, including by us.</p>
+    <p>Receipt records are stored for 10 years in AWS S3 Object Lock (Compliance Mode). This storage is write-once, read-many — records cannot be modified or deleted during the retention period, including by us.</p>
     <p>Server logs are retained for 30 days and then permanently deleted.</p>
 
     <h2>Third Parties</h2>
     <ul>
       <li>AWS — cloud infrastructure, S3 storage, KMS HSM signing</li>
-      <li>Stripe — payment processing for paid attestations</li>
+      <li>Stripe — payment processing for optional paid certify flows</li>
     </ul>
     <p>We do not sell, share, or transfer data to any other third parties.</p>
 
@@ -80,8 +81,8 @@
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project.</p>
       <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
+      <p>Receipts provide cryptographic proof of submission timestamps and hashes.<br>They do not constitute legal certification, financial guarantees, identity proof, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">·</span>

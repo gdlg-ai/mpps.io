@@ -1,22 +1,67 @@
 # mpps.io
 
-Proof of delivery for the Machine Payments Protocol.
+Tamper-proof receipts for AI agent work.
 
-> Stripe MPP solved how agents pay. mpps.io solves how agents prove what happened.
+> Hash the artifact or action manifest. Get an HSM-signed receipt. Verify it later.
 
 ## What is mpps.io?
 
-mpps.io provides cryptographic attestation for agent-to-agent (A2A) transactions built on Stripe's Machine Payments Protocol. Every attestation records WHO submitted it (agent identity derived from IP address), WHAT was submitted (a SHA-256 hash — we never see your data), and WHEN it was submitted (a hardware-secured timestamp from atomic clock infrastructure). We don't validate content, we don't judge disputes — we provide mathematical proof that a specific hash existed at a specific time, signed by tamper-proof hardware.
+mpps.io creates cryptographic receipts for AI agents, automation workflows, and generated artifacts. A receipt proves that a specific hash or bounded action manifest was submitted at a specific time, signed by AWS KMS HSM key material, and stored under 10-year immutable retention.
 
-## Three Principles
+mpps.io does not inspect your files, judge output quality, or certify legal truth. It gives you a durable evidence anchor for questions like:
 
-1. **Don't Look** — We receive only a SHA-256 hash. We never see, store, or transmit your original content.
-2. **Don't Judge** — We are not arbitrators. We attest to facts (hash + time + identity), not interpretations.
-3. **Don't Delete** — Every attestation is stored under S3 Object Lock (Compliance Mode) with 10-year retention. No one — not even us — can delete it.
+- What did this agent claim it delivered?
+- Which artifact hash was attached to this workflow?
+- What inputs or parent receipts were linked to the result?
+- Has this receipt changed since it was created?
 
-## Quick Start
+## Core Use Cases
 
-No SDK or API key required. Just send a hash:
+1. **Agent task completion** - attach a receipt to a finished report, code change, dataset, image, video, or decision memo.
+2. **CI/release provenance** - anchor release artifacts, build outputs, and deployment manifests.
+3. **Delivery evidence** - prove the hash of what was sent or received after an API, data, or payment workflow.
+4. **Skill/plugin publication** - publish a receipt for the exact package or manifest users should install.
+
+## Create an Agent Action Receipt
+
+Use `/v1/receipts` when you have structured context: action name, artifact hashes, input hashes, and workflow metadata.
+
+```bash
+curl -X POST https://api.mpps.io/v1/receipts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "release.publish",
+    "subject": "dist/app.tar.gz",
+    "artifact_hashes": [
+      {
+        "label": "dist/app.tar.gz",
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "context": {
+      "repo": "gdlg-ai/example",
+      "commit": "abc123",
+      "workflow": "release"
+    }
+  }'
+```
+
+The service canonicalizes the manifest, computes a `manifest_hash`, signs it, stores it, and returns:
+
+```json
+{
+  "uuid": "mpps_att_8e2f4a1b3c5d4e6f",
+  "receipt_type": "agent_action",
+  "manifest_hash": "sha256:...",
+  "timestamp": "2026-05-01T15:00:00.000Z",
+  "signature": "...",
+  "verify_url": "https://api.mpps.io/v1/verify/mpps_att_8e2f4a1b3c5d4e6f"
+}
+```
+
+## Raw Hash Receipt
+
+Use `/v1/notarize` when all you need is a receipt for one hash.
 
 ```bash
 curl -X POST https://api.mpps.io/v1/notarize \
@@ -24,31 +69,16 @@ curl -X POST https://api.mpps.io/v1/notarize \
   -d '{"content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}'
 ```
 
-Or with Python:
+## Certified Metadata Receipt
 
-```python
-import requests
-
-resp = requests.post("https://api.mpps.io/v1/notarize", json={
-    "content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-})
-receipt = resp.json()
-
-print(receipt["uuid"])       # mpps_att_8e2f4a1b3c5d4e6f
-print(receipt["timestamp"])  # 2026-03-20T05:13:01.000Z
-print(receipt["signature"])  # RSA-PSS signed by HSM
-```
-
-## Certify
-
-For certified attestations with metadata (10 free/day, then $0.01 via Stripe):
+Use `/v1/certify` for a richer receipt with description, parties, amount, transaction type, and optional parent receipt.
 
 ```bash
 curl -X POST https://api.mpps.io/v1/certify \
   -H "Content-Type: application/json" \
   -d '{
     "content_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "description": "Order delivery confirmation",
+    "description": "API data delivery confirmation",
     "transaction_type": "DELIVERY_PROOF"
   }'
 ```
@@ -59,31 +89,40 @@ curl -X POST https://api.mpps.io/v1/certify \
 curl https://api.mpps.io/v1/verify/mpps_att_8e2f4a1b3c5d4e6f
 ```
 
-## How It Works
+Offline verification is supported with the public key from:
 
-1. **Hash** — You compute a SHA-256 hash of your transaction data and send it to mpps.io.
-2. **Sign** — The hash is signed by a hardware security module (HSM) and stored immutably.
-3. **Receive** — You get back a signed receipt (UUID, timestamp, HSM signature) that proves your hash existed at that exact moment.
+```bash
+curl https://api.mpps.io/v1/public-key
+```
 
-## Five-Layer Trust Chain
+## Trust Model
 
-| Layer | Name | Mechanism |
-|-------|------|-----------|
-| 1 | **Identity Anchor** | SHA-256 derivation from agent IP address (Argon2id upgrade planned) |
-| 2 | **Temporal Consensus** | AWS Time Sync Service (satellite atomic clock clusters, microsecond precision) |
-| 3 | **Hardware Signing** | AWS KMS HSM (FIPS 140-2 Level 3), RSA-PSS SHA-256, private key never exportable |
-| 4 | **Immutable Storage** | AWS S3 Object Lock, Compliance Mode, 10-year retention — cannot be deleted by anyone including AWS root |
-| 5 | **Public Verification** | Open-source verifier, offline-capable — if mpps.io disappears, your evidence remains valid |
+| Layer | Mechanism | What It Means |
+|-------|-----------|---------------|
+| Hash-only input | SHA-256 hashes and bounded metadata | Original files do not need to leave your system |
+| Source fingerprint | `mpps_agent_` derived from request source | Useful correlation, not strong identity |
+| Timestamp | App timestamp plus KMS response timestamp | Signed evidence is anchored to service and AWS infrastructure time |
+| Signature | AWS KMS RSA-PSS SHA-256 | Receipts are independently verifiable |
+| Storage | S3 Object Lock, Compliance Mode, 10-year retention | Stored receipts are designed to be immutable |
+| Verification | API and offline verifier | Receipts remain useful outside the live service |
+
+## What mpps.io Does Not Prove
+
+- It does not prove the submitted content is true, safe, legal, or high quality.
+- It does not prove strong user or agent identity.
+- It does not inspect raw artifacts.
+- It is not a legal notary or dispute-resolution service.
 
 ## Pricing
 
-| Tier | Rate | Payment |
-|------|------|---------|
-| Free notarize | 10 / hour | None |
-| Free certify | 10 / day | None |
-| Paid certify | $0.01 / attestation | Stripe MPP |
+| Endpoint | Free Tier | Paid Path |
+|----------|-----------|-----------|
+| `/v1/receipts` | 10/hour per source | Not required in this release |
+| `/v1/notarize` | 10/hour per source | Not required in this release |
+| `/v1/certify` | 10/day per source | Optional $0.01 Stripe flow after quota |
+| `/v1/verify` | Unlimited practical use | None |
 
-Paid certificates include a globally unique `certification_id` (format: `MPPS-YYYYMMDD-NNNNNN-CC`) and a printable certificate page with QR verification.
+Payment workflows are supported as a use case, but mpps.io no longer depends on any payment protocol or service registry for its product positioning.
 
 ## Documentation
 
@@ -99,4 +138,4 @@ Paid certificates include a globally unique `certification_id` (format: `MPPS-YY
 
 ## Disclaimer
 
-mpps.io is an independent open-source project built by GlideLogic Corp. (OTCQB: GDLG). Not affiliated with, endorsed by, or officially connected to Stripe, Inc. or Tempo.
+mpps.io is an independent open-source project built by GlideLogic Corp. (OTCQB: GDLG). Not affiliated with, endorsed by, or officially connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.

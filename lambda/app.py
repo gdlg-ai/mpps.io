@@ -1,5 +1,5 @@
 """
-mpps.io — Serverless Attestation API v0.4.0
+mpps.io — Serverless Receipt API v0.5.0
 Lambda + API Gateway + DynamoDB + KMS + S3
 """
 
@@ -23,7 +23,7 @@ from pydantic import BaseModel, Field, field_validator
 
 # ── Config ──────────────────────────────────────────────
 
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 AWS_REGION = os.getenv("AWS_REGION", "us-west-2")
 KMS_KEY_ALIAS = "alias/mpps-notary-key"
 S3_BUCKET = "mpps-vault-2026"
@@ -38,7 +38,12 @@ MAX_HASH_LEN = 128
 MAX_DESC_LEN = 500
 MAX_PARTIES = 10
 MAX_AMOUNT_LEN = 50
+MAX_LABEL_LEN = 80
+MAX_SUBJECT_LEN = 160
+MAX_CONTEXT_ITEMS = 20
+MAX_CONTEXT_VALUE_LEN = 200
 HEX_RE = re.compile(r'^sha256:[0-9a-f]{8,128}$')
+ACTION_RE = re.compile(r'^[A-Za-z0-9_.:-]{1,80}$')
 
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY", "")
 stripe.api_version = "2026-03-04.preview"
@@ -195,6 +200,78 @@ class CertifyRequest(BaseModel):
             raise ValueError("must start with 'mpps_att_'")
         return v
 
+class HashRef(BaseModel):
+    label: Optional[str] = Field(None, max_length=MAX_LABEL_LEN)
+    sha256: str = Field(..., max_length=MAX_HASH_LEN)
+
+    @field_validator("sha256")
+    @classmethod
+    def validate_hash(cls, v):
+        if not HEX_RE.match(v):
+            raise ValueError("must be format 'sha256:<hex>' with 8-128 hex characters")
+        return v
+
+class ReceiptRequest(BaseModel):
+    action: str = Field(..., max_length=80)
+    subject: Optional[str] = Field(None, max_length=MAX_SUBJECT_LEN)
+    artifact_hashes: list[HashRef] = Field(..., min_length=1, max_length=20)
+    input_hashes: Optional[list[HashRef]] = Field(None, max_length=20)
+    context: Optional[dict[str, str]] = None
+    parent_uuid: Optional[str] = Field(None, max_length=40)
+
+    @field_validator("action")
+    @classmethod
+    def validate_action(cls, v):
+        if not ACTION_RE.match(v):
+            raise ValueError("use letters, numbers, dots, underscores, colons, or hyphens")
+        return v
+
+    @field_validator("context")
+    @classmethod
+    def validate_context(cls, v):
+        if v is None:
+            return v
+        if len(v) > MAX_CONTEXT_ITEMS:
+            raise ValueError(f"maximum {MAX_CONTEXT_ITEMS} context fields")
+        for key, value in v.items():
+            if not key or len(key) > MAX_LABEL_LEN:
+                raise ValueError(f"context keys must be 1-{MAX_LABEL_LEN} characters")
+            if not isinstance(value, str) or len(value) > MAX_CONTEXT_VALUE_LEN:
+                raise ValueError(f"context values must be strings up to {MAX_CONTEXT_VALUE_LEN} characters")
+        return v
+
+    @field_validator("parent_uuid")
+    @classmethod
+    def validate_parent(cls, v):
+        if v and not v.startswith("mpps_att_"):
+            raise ValueError("must start with 'mpps_att_'")
+        return v
+
+def _hash_ref_public(ref: HashRef) -> dict:
+    data = {"sha256": ref.sha256}
+    if ref.label:
+        data["label"] = ref.label
+    return data
+
+def _build_receipt_manifest(req: ReceiptRequest) -> tuple[dict, str]:
+    manifest = {
+        "schema": "mpps.agent_receipt.v1",
+        "action": req.action,
+        "artifact_hashes": [_hash_ref_public(ref) for ref in req.artifact_hashes],
+    }
+    if req.subject:
+        manifest["subject"] = req.subject
+    if req.input_hashes:
+        manifest["input_hashes"] = [_hash_ref_public(ref) for ref in req.input_hashes]
+    if req.context:
+        manifest["context"] = {key: req.context[key] for key in sorted(req.context)}
+    if req.parent_uuid:
+        manifest["parent_uuid"] = req.parent_uuid
+
+    canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    manifest_hash = "sha256:" + hashlib.sha256(canonical).hexdigest()
+    return manifest, manifest_hash
+
 # ── Certification Counter ────────────────────────────────
 
 def _next_cert_id() -> str:
@@ -288,9 +365,11 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 async def root():
     return {
         "service": "mpps.io",
-        "description": "Proof of delivery for the Machine Payments Protocol",
+        "description": "Tamper-proof receipts for AI agent work",
+        "positioning": "HSM-signed action receipts for generated artifacts, workflow outputs, and delivery evidence",
         "version": VERSION,
         "endpoints": {
+            "receipts": "POST /v1/receipts",
             "notarize": "POST /v1/notarize",
             "certify": "POST /v1/certify",
             "verify": "GET /v1/verify/{uuid}",
@@ -323,6 +402,42 @@ async def global_handler(request: Request, exc: Exception):
 async def health():
     return {"status": "ok", "service": "mpps.io", "version": VERSION,
             "runtime": "lambda", "timestamp": datetime.now(timezone.utc).isoformat()}
+
+# ── Agent Action Receipts ───────────────────────────────
+
+@app.post("/v1/receipts")
+async def create_receipt(req: ReceiptRequest, request: Request):
+    rid = _request_id()
+    ip = _get_real_ip(request)
+
+    allowed, remaining, reset = _rate_check(ip)
+    if not allowed:
+        return _error("rate_limited", f"Free tier: {FREE_LIMIT}/hour.", 429, rid,
+                       {"Retry-After": str(reset), "X-RateLimit-Limit": str(FREE_LIMIT),
+                        "X-RateLimit-Remaining": "0", "X-RateLimit-Reset": str(reset)})
+
+    manifest, manifest_hash = _build_receipt_manifest(req)
+    metadata = {
+        "receipt_type": "agent_action",
+        "manifest_hash": manifest_hash,
+        "manifest": manifest,
+    }
+
+    _rate_hit(ip)
+    try:
+        receipt = _sign_and_store(manifest_hash, ip, metadata=metadata, certified=True)
+    except RuntimeError as e:
+        return _error("service_error", str(e), 503, rid)
+
+    receipt["request_id"] = rid
+    receipt["receipt_type"] = "agent_action"
+    receipt["manifest_hash"] = manifest_hash
+    receipt["manifest"] = manifest
+    return _json_response(receipt, 200, rid, {
+        "X-RateLimit-Limit": str(FREE_LIMIT),
+        "X-RateLimit-Remaining": str(max(remaining - 1, 0)),
+        "X-RateLimit-Reset": str(reset),
+    })
 
 # ── Notarize (free) ─────────────────────────────────────
 
@@ -397,7 +512,7 @@ async def certify(req: CertifyRequest, request: Request):
         return _json_response({
             "type": "payment_required", "challenge_id": cid,
             "amount": "0.01", "currency": "usd",
-            "description": "mpps.io certified attestation",
+            "description": "mpps.io certified receipt",
             "payment_intent_id": pi.id, "client_secret": pi.client_secret,
             "methods": ["card", "crypto"], "service": "mpps.io", "request_id": rid,
         }, 402, rid, {
@@ -480,6 +595,14 @@ async def verify(att_uuid: str):
             }
             if internal.get("metadata"):
                 public["metadata"] = internal["metadata"]
+                meta = internal["metadata"]
+                if isinstance(meta, dict):
+                    if meta.get("receipt_type"):
+                        public["receipt_type"] = meta["receipt_type"]
+                    if meta.get("manifest_hash"):
+                        public["manifest_hash"] = meta["manifest_hash"]
+                    if meta.get("manifest"):
+                        public["manifest"] = meta["manifest"]
             if internal.get("certification_id"):
                 public["certification_id"] = internal["certification_id"]
             if internal.get("certified"):
@@ -490,7 +613,7 @@ async def verify(att_uuid: str):
         except Exception:
             continue
 
-    return _error("not_found", f"Attestation {att_uuid} not found", 404, rid)
+    return _error("not_found", f"Receipt {att_uuid} not found", 404, rid)
 
 # ── Public Key ──────────────────────────────────────────
 
@@ -505,34 +628,39 @@ async def public_key():
     return _json_response({
         "algorithm": "RSASSA_PSS_SHA_256", "key_spec": "RSA_2048",
         "public_key_base64": pem, "format": "DER",
-        "usage": "Verify attestation signatures offline.", "request_id": rid,
+        "usage": "Verify receipt signatures offline.", "request_id": rid,
     }, 200, rid)
 
 # ── llms.txt ────────────────────────────────────────────
 
 @app.get("/llms.txt")
 async def llms_txt():
-    return Response(content=f"""# mpps.io — Proof of Delivery for the Machine Payments Protocol
+    return Response(content=f"""# mpps.io — Tamper-Proof Receipts for AI Agent Work
 # Version: {VERSION}
 # Base URL: https://api.mpps.io
-# MPP-native service: standard 402 payment flow, Payment-Receipt headers
+# Purpose: HSM-signed receipts for agent actions, generated artifacts, workflow outputs, and delivery evidence
 # Runtime: AWS Lambda (serverless)
 
 ## Services
 
+### POST /v1/receipts
+Free (10/hour per source). Create a structured agent action receipt. No auth required.
+Input: {{"action": "build.release", "subject": "dist/app.tar.gz", "artifact_hashes": [{{"label": "dist/app.tar.gz", "sha256": "sha256:<hex>"}}], "input_hashes": [{{"label": "prompt", "sha256": "sha256:<hex>"}}], "context": {{"repo": "...", "commit": "..."}}, "parent_uuid": "mpps_att_..."}}
+Output: HSM-signed receipt with receipt_type="agent_action", manifest_hash, manifest, timestamp, signature, storage, verify_url.
+
 ### POST /v1/notarize
-Free (10/hour per IP). HSM-signed attestation. No auth required.
+Free (10/hour per source). Raw hash receipt. No auth required.
 Input: {{"content_hash": "sha256:<hex>"}}
 Output: {{"uuid": "mpps_att_<16hex>", "agent_id": "mpps_agent_<8hex>", "content_hash": "sha256:...", "timestamp": "ISO8601", "signature": "<base64>", "certified": false, "storage": {{"provider": "aws-s3", "lock_mode": "COMPLIANCE", "retention_years": 10}}, "verify_url": "https://api.mpps.io/v1/verify/<uuid>", "request_id": "req_<12hex>"}}
 
 ### POST /v1/certify
-10 free/day per IP, then $0.01 via MPP 402 flow.
+10 free/day per source, then optional $0.01 Stripe payment flow.
 Input: {{"content_hash": "sha256:<hex>", "description": "...", "parties": [...], "amount": "...", "transaction_type": "...", "parent_uuid": "mpps_att_..."}}
 Free response: same as notarize but certified: true + certificate_url.
-Paid flow: POST without auth → 402 with payment_intent_id + client_secret → pay via Stripe (card/crypto) → POST with Authorization: Payment <credential> → certified receipt + Payment-Receipt header.
+Paid flow: POST without auth after quota → 402 with payment_intent_id + client_secret → pay via Stripe → POST with Authorization: Payment <credential> → certified receipt + Payment-Receipt header.
 
 ### GET /v1/verify/{{uuid}}
-Free. Returns attestation with verified: true.
+Free. Returns receipt with verified: true.
 
 ### GET /v1/public-key
 Free. Returns JSON with public_key_base64 (DER format, base64 encoded) for offline signature verification.
@@ -541,17 +669,19 @@ Free. Returns JSON with public_key_base64 (DER format, base64 encoded) for offli
 Service status. Returns version, runtime, timestamp.
 
 ## Pricing
+- /v1/receipts: Free (10/hour)
 - /v1/notarize: Free (10/hour)
-- /v1/certify: 10 free/day, then $0.01 via Stripe (card or USDC on Tempo)
+- /v1/certify: 10 free/day, then optional $0.01 via Stripe
 - /v1/verify: Free
 - /v1/public-key: Free
 
-## MPP Ecosystem
-MPP receipts prove money moved. mpps.io proves what was delivered.
-After any MPP transaction, either party calls /v1/notarize or /v1/certify to attest what was exchanged.
+## Trust Model
+mpps.io proves that a hash or bounded receipt manifest was submitted at a specific time and signed by non-exportable HSM key material.
+agent_id is a weak source fingerprint derived from network source information, not strong authenticated identity.
+mpps.io does not validate content quality, legality, authorship, or delivery truth.
 
 ## About
-Built by GlideLogic Corp. (OTCQB: GDLG). Not affiliated with Stripe or Tempo.
+Built by GlideLogic Corp. (OTCQB: GDLG). Not affiliated with Stripe, OpenAI, Anthropic, C2PA, or SLSA.
 Website: https://mpps.io | GitHub: https://github.com/gdlg-ai/mpps.io | Contact: contact@mpps.io
 """, media_type="text/plain")
 

@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Attestation — mpps.io</title>
-  <meta name="description" content="Verify any mpps.io attestation independently. Enter a UUID to retrieve cryptographic proof.">
+  <title>Verify Receipt - mpps.io</title>
+  <meta name="description" content="Verify any mpps.io receipt independently. Enter a UUID to retrieve cryptographic proof.">
     <link rel="canonical" href="https://mpps.io/verify">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mpps.io/verify">
-  <meta property="og:title" content="Verify Attestation — mpps.io">
-  <meta property="og:description" content="Verify any mpps.io attestation by UUID. Independent, cryptographic proof.">
+  <meta property="og:title" content="Verify Receipt - mpps.io">
+  <meta property="og:description" content="Verify any mpps.io receipt by UUID. Independent, cryptographic proof.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Verify Attestation — mpps.io">
-  <meta name="twitter:description" content="Verify any mpps.io attestation by UUID. Independent, cryptographic proof.">
+  <meta name="twitter:title" content="Verify Receipt - mpps.io">
+  <meta name="twitter:description" content="Verify any mpps.io receipt by UUID. Independent, cryptographic proof.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
 </head>
@@ -35,8 +35,8 @@
   <div class="content">
 
     <section style="padding-top: 60px;">
-      <div class="section-title">Verify Attestation</div>
-      <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 15px;">Enter an attestation UUID to verify its existence and retrieve the cryptographic receipt.</p>
+      <div class="section-title">Verify Receipt</div>
+      <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 15px;">Enter a receipt UUID to verify its existence and retrieve the cryptographic record.</p>
 
       <div class="verify-search">
         <input type="text" id="uuid-input" placeholder="mpps_att_d530a57c095a4d66" value="mpps_att_d530a57c095a4d66">
@@ -47,7 +47,7 @@
 
       <div class="data-table" id="attestation-data">
         <div class="data-row">
-          <div class="data-label">Attestation ID</div>
+          <div class="data-label">Receipt ID</div>
           <div class="data-value">mpps_att_d530a57c095a4d66</div>
         </div>
         <div class="data-row">
@@ -93,7 +93,7 @@
         <a href="/cert/" class="btn btn-secondary btn-sm">View Certificate →</a>
       </div>
 
-      <p style="color: var(--text-dim); font-size: 13px; margin-top: 24px;">Live verification queries the API. This page shows the Genesis Certificate data.</p>
+      <p style="color: var(--text-dim); font-size: 13px; margin-top: 24px;">Live verification queries the API. This page shows the Genesis Certificate data as a legacy receipt example.</p>
     </section>
 
   </div>
@@ -102,8 +102,8 @@
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project.</p>
       <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
+      <p>Receipts provide cryptographic proof of submission timestamps and hashes.<br>They do not constitute legal certification, financial guarantees, identity proof, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">·</span>

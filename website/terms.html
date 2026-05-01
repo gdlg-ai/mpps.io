@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Terms of Service — mpps.io</title>
-  <meta name="description" content="Terms of service for mpps.io cryptographic attestation service.">
+  <meta name="description" content="Terms of service for mpps.io cryptographic receipt service.">
     <link rel="canonical" href="https://mpps.io/terms">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://mpps.io/terms">
   <meta property="og:title" content="Terms of Service — mpps.io">
-  <meta property="og:description" content="mpps.io terms of service. Cryptographic attestation, not legal certification.">
+  <meta property="og:description" content="mpps.io terms of service. Cryptographic receipts, not legal certification.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Terms of Service — mpps.io">
-  <meta name="twitter:description" content="mpps.io terms of service. Cryptographic attestation, not legal certification.">
+  <meta name="twitter:description" content="mpps.io terms of service. Cryptographic receipts, not legal certification.">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2B21;</text></svg>">
 </head>
@@ -38,16 +38,16 @@
     <p class="effective">Effective: March 20, 2026</p>
 
     <h2>Service Description</h2>
-    <p>mpps.io provides a cryptographic attestation service for machine transactions. The service accepts SHA-256 content hashes, signs them with a hardware security module (HSM), and stores the resulting attestation records in immutable storage.</p>
+    <p>mpps.io provides cryptographic receipts for AI agent work, automation workflows, generated artifacts, and raw content hashes. The service accepts SHA-256 hashes and bounded metadata, signs receipt evidence with a hardware security module (HSM), and stores the resulting records in immutable storage.</p>
 
     <h2>What We Are</h2>
-    <p>An attestation service that provides cryptographic proof that a specific content hash was submitted at a specific point in time. Each attestation is HSM-signed (FIPS 140-2 Level 3) and stored in AWS S3 Object Lock (Compliance Mode) for 10 years.</p>
+    <p>A receipt service that provides cryptographic proof that a specific content hash or structured action manifest was submitted at a specific point in time. Each receipt is HSM-signed and stored in AWS S3 Object Lock (Compliance Mode) for 10 years.</p>
 
     <h2>What We Are NOT</h2>
     <ul>
-      <li>Not a legal notary service — attestations are not legally binding notarizations</li>
+      <li>Not a legal notary service — receipts are not legally binding notarizations</li>
       <li>Not a content validator — we do not evaluate, verify, or endorse the content behind any hash</li>
-      <li>Not a financial guarantee — attestations do not guarantee the value, delivery, or quality of any transaction</li>
+      <li>Not a financial guarantee — receipts do not guarantee the value, delivery, or quality of any transaction</li>
       <li>Not a dispute resolution service — we provide evidence, not adjudication</li>
     </ul>
 
@@ -55,12 +55,12 @@
     <ul>
       <li>Do not use the service for any illegal purpose under applicable law</li>
       <li>Do not abuse the service through excessive requests, automated attacks, or circumvention of rate limits</li>
-      <li>Do not misrepresent attestations as legal certifications, financial guarantees, or content endorsements</li>
+      <li>Do not misrepresent receipts as legal certifications, financial guarantees, identity proof, or content endorsements</li>
     </ul>
 
     <h2>Rate Limits</h2>
-    <p>Free tier: 10 attestations per hour. No registration required.</p>
-    <p>Paid tier: $0.01 per attestation via MPP (Machine Payment Protocol). Coming soon.</p>
+    <p>Free tier: 10 structured receipts or raw hash receipts per hour, plus 10 certified metadata receipts per day. No registration required.</p>
+    <p>Optional paid certify flow: $0.01 per certified receipt after the free daily quota, processed through Stripe when enabled.</p>
 
     <h2>Limitation of Liability</h2>
     <p>The service is provided "as is" without warranties of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.</p>
@@ -68,7 +68,7 @@
     <p>Maximum aggregate liability shall not exceed the total fees paid by the user to mpps.io in the 12 months preceding the claim.</p>
 
     <h2>Open Source</h2>
-    <p>The mpps.io source code is available under the MIT License. The attestation protocol, API specification, and verification logic are open and auditable.</p>
+    <p>The mpps.io source code is available under the MIT License. The receipt protocol, API specification, and verification logic are open and auditable.</p>
 
     <h2>Modifications</h2>
     <p>We may update these terms from time to time. Material changes will be posted on this page with an updated effective date. Continued use of the service after changes constitutes acceptance.</p>
@@ -85,8 +85,8 @@
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project.</p>
       <p>Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
-      <p>Attestations provide cryptographic proof of submission timestamps and content hashes.<br>They do not constitute legal certification, financial guarantees, or content validation.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
+      <p>Receipts provide cryptographic proof of submission timestamps and hashes.<br>They do not constitute legal certification, financial guarantees, identity proof, or content validation.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">·</span>

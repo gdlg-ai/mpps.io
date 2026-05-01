@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attestation Certificate — mpps.io</title>
-  <meta name="description" content="Verify and view an mpps.io attestation certificate. Independently verifiable, HSM-signed, stored for 10 years.">
+  <title>Receipt Certificate - mpps.io</title>
+  <meta name="description" content="Verify and view an mpps.io receipt certificate. Independently verifiable, HSM-signed, stored for 10 years.">
   <link rel="canonical" href="https://mpps.io/cert/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Attestation Certificate — mpps.io">
-  <meta property="og:description" content="Cryptographic attestation certificate. HSM-signed, independently verifiable.">
+  <meta property="og:title" content="Receipt Certificate - mpps.io">
+  <meta property="og:description" content="Cryptographic receipt certificate. HSM-signed, independently verifiable.">
   <meta property="og:site_name" content="mpps.io">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="../css/style.css">
@@ -63,7 +63,7 @@
     <a href="/" style="display:inline-block;margin-bottom:1rem;color:var(--text-muted);text-decoration:none;font-size:14px;">← Back to mpps.io</a>
 
     <div id="cert-content">
-      <div class="cert-loading">Loading attestation...</div>
+      <div class="cert-loading">Loading receipt...</div>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <p>mpps.io is an independent open-source project. Built by GlideLogic Corp. (OTCQB: GDLG).</p>
-      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., Tempo, or OpenClaw.</p>
+      <p>Not affiliated with, endorsed by, or connected to Stripe, Inc., OpenClaw, OpenAI, Anthropic, C2PA, or SLSA.</p>
       <div class="footer-links">
         <a href="https://github.com/gdlg-ai/mpps.io" target="_blank">GitHub</a>
         <span class="sep">·</span><a href="/privacy.html">Privacy</a>
@@ -101,13 +101,13 @@
         .then(r => r.json())
         .then(data => {
           if (data.error) {
-            container.innerHTML = `<div class="cert-error"><h2>Attestation Not Found</h2><p>${data.message}</p></div>`;
+            container.innerHTML = `<div class="cert-error"><h2>Receipt Not Found</h2><p>${data.message}</p></div>`;
             return;
           }
           renderCert(data);
         })
         .catch(() => {
-          container.innerHTML = `<div class="cert-error"><h2>Error</h2><p>Could not load attestation.</p></div>`;
+          container.innerHTML = `<div class="cert-error"><h2>Error</h2><p>Could not load receipt.</p></div>`;
         });
     }
 
@@ -123,7 +123,7 @@
       if (isPaid && certId) {
         badgeHtml = `<div class="cert-badge paid">Paid Certificate</div><div class="cert-id">${certId}</div>`;
       } else if (d.certified) {
-        badgeHtml = `<div class="cert-badge free">Attestation Certificate</div>`;
+        badgeHtml = `<div class="cert-badge free">Receipt Certificate</div>`;
       }
 
       let genesisHtml = '';
@@ -131,7 +131,7 @@
         genesisHtml = `
           <div class="cert-divider"></div>
           <div class="cert-genesis">
-            <p>This is the genesis attestation of mpps.io — Certificate #1.</p>
+            <p>This is the genesis receipt of mpps.io - Certificate #1.</p>
             <p class="quote">"On March 20, 2026, two days after agents learned to pay, they learned to remember."</p>
           </div>`;
       }
@@ -152,7 +152,7 @@
       container.innerHTML = `
         <div class="cert-card">
           <div class="cert-header">
-            <h1>Attestation Certificate</h1>
+            <h1>Receipt Certificate</h1>
             <div class="cert-issuer">mpps.io</div>
           </div>
           <div class="cert-divider"></div>
@@ -162,7 +162,7 @@
           </div>
           <div class="cert-field"><div class="cert-field-label">Content Hash</div><div class="cert-field-value">${d.content_hash}</div></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-            <div><span class="cert-field-label">Attestation ID</span><div class="cert-field-value">${d.uuid}</div></div>
+            <div><span class="cert-field-label">Receipt ID</span><div class="cert-field-value">${d.uuid}</div></div>
             <div><span class="cert-field-label">Agent</span><div class="cert-field-value">${d.agent_id}</div></div>
           </div>
           ${metadataHtml}
@@ -180,14 +180,14 @@
           ${genesisHtml}
           <div class="cert-divider" style="margin:10px 0;"></div>
           <div style="text-align:center;font-size:10px;color:#a1a1aa;">
-            Issued by mpps.io — GlideLogic Corp. (OTCQB: GDLG) · <span style="font-family:var(--mono);font-size:9px;">${verifyUrl}</span>
+            Issued by mpps.io - GlideLogic Corp. (OTCQB: GDLG) · <span style="font-family:var(--mono);font-size:9px;">${verifyUrl}</span>
           </div>
         </div>
         <div class="cert-actions">
           <a href="javascript:window.print()" class="btn btn-secondary btn-sm">Print / Save PDF</a>
           <a href="${verifyUrl}" class="btn btn-secondary btn-sm" target="_blank">Verify via API</a>
         </div>
-        <div class="cert-note">This certificate was generated from attestation data stored immutably in AWS S3.</div>
+        <div class="cert-note">This certificate was generated from receipt data stored immutably in AWS S3.</div>
       `;
 
       // Render QR
